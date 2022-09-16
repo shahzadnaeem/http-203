@@ -39,10 +39,24 @@
         }
 
         :root {
+            --red: red;
             --blue: blue;
             --blue-bg: steelblue;
             --yellow-bg: lemonchiffon;
+            --red-bg: firebrick;
             --white: antiquewhite;
+            --border: limegreen;
+        }
+
+        /* Initial Containing Block (desktop browsers)
+           In Console, try: document.documentElement.clientHeight
+        */
+        html {
+            /* Try removing width/height and see change scrolling with small window is best */
+            width: 100%;
+            height: 100%;
+            outline: 5px dotted var(--red);
+            outline-offset: -5px;
         }
 
         body {
@@ -74,11 +88,31 @@
             font-size: 1.8rem;
             padding: 0.2rem 1.0rem;
         }
+
+        .demo-container {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            width: 20.0rem;
+            height: 20.0rem;
+            /* outline: 4px solid var(--border);
+            outline-offset: -4px; */
+        }
+
+        .demo-container>.child {
+            width: 100%;
+            height: 100%;
+            background-color: var(--red-bg);
+            color: var(--white);
+        }
     </style>
 </head>
 
 <body>
     <div id="the-viewport"></div>
+    <div class="demo-container">
+        <p class="child">Hi!</p>
+    </div>
     <p class="content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet, quae nesciunt obcaecati cum
         officiis perferendis!
         Rem voluptates officia quod autem architecto nam, quas sit animi voluptas qui sed iusto nemo tempora recusandae,
