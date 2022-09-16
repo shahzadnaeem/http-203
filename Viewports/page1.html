@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the-viewport</title>
+
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        div,
+        p,
+        ol,
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        :root {
+            --blue: blue;
+            --blue-bg: steelblue;
+            --yellow-bg: lemonchiffon;
+            --white: antiquewhite;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 3.0rem;
+            font-weight: 800;
+
+            background-color: var(--yellow-bg);
+        }
+
+        #the-viewport {
+            position: fixed;
+            inset: 0;
+            outline: 5px dashed var(--blue);
+            outline-offset: -5px;
+        }
+
+        .content {
+            opacity: 20%;
+        }
+
+        .fixed {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            translate: -50% 0;
+            background-color: var(--blue-bg);
+            color: var(--white);
+            font-size: 1.8rem;
+            padding: 0.2rem 1.0rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="the-viewport"></div>
+    <p class="content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet, quae nesciunt obcaecati cum
+        officiis perferendis!
+        Rem voluptates officia quod autem architecto nam, quas sit animi voluptas qui sed iusto nemo tempora recusandae,
+        saepe ducimus id ea excepturi impedit fuga doloribus, soluta temporibus voluptatem! Unde inventore iste vitae,
+        reprehenderit facilis rem nostrum perspiciatis tempora aperiam perferendis tenetur nobis consequatur in incidunt
+        dolore libero placeat facere, cumque tempore iure. Aliquid quos sequi officiis dolorum veniam commodi! Dolor eos
+        nam magni aspernatur, alias deleniti dolores laboriosam soluta sint molestiae enim quibusdam adipisci accusamus
+        maxime quae sit consequatur cupiditate voluptate in, consequuntur fugiat consectetur.
+    </p>
+    <p class="fixed">position: fixed; bottom: 0;</p>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>http-203 and related stuff</title>
+
+    <style>
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        div,
+        p,
+        ol,
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ol,
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        :root {
+            --blue: blue;
+            --blue-bg: steelblue;
+            --yellow-bg: lemonchiffon;
+            --white: antiquewhite;
+            --link: darkblue;
+            --alt-link: indigo;
+        }
+
+        body {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+            background-color: var(--yellow-bg);
+        }
+
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: var(--link);
+            font-weight: 600;
+        }
+
+        .links-entry {
+            display: flex;
+            flex-direction: row;
+            gap: 1.0rem;
+        }
+
+        .links-entry>a:last-child {
+            color: var(--alt-link);
+        }
+
+        .links-entry>a:last-child::after {
+            content: ' ⮵ YouTube';
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>http-203 and related stuff</h1>
+    <div class="links-entry">
+        <a href="Viewports/page1.html">Viewports demo</a>
+        <a href="https://www.youtube.com/watch?v=xl9R8aTOW_I&t=1336s">It's viewports all the way down | HTTP 203</a>
+    </div>
+</body>
+
+</html>
