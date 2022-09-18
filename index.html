@@ -41,9 +41,9 @@
         :root {
             --blue: blue;
             --blue-bg: steelblue;
-            --yellow-bg: lemonchiffon;
+            --yellow-bg: rgb(240, 240, 213);
             --white: antiquewhite;
-            --link: darkblue;
+            --link: rgb(4, 4, 93);
             --alt-link: indigo;
         }
 
@@ -70,11 +70,11 @@
             gap: 1.0rem;
         }
 
-        .links-entry>a:last-child {
+        .links-entry>a[href*="www.youtube.com"] {
             color: var(--alt-link);
         }
 
-        .links-entry>a:last-child::after {
+        .links-entry>a[href*="www.youtube.com"]::after {
             content: ' ⮵ YouTube';
         }
     </style>
@@ -84,8 +84,12 @@
 <body>
     <h1>http-203 and related stuff</h1>
     <div class="links-entry">
+        <a href="Template/index.html">Template HTML Page</a>
+    </div>
+
+    <div class="links-entry">
         <a href="Viewports/page1.html">Viewports demo</a>
-        <a href="https://www.youtube.com/watch?v=xl9R8aTOW_I&t=1336s">It's viewports all the way down | HTTP 203</a>
+        <a href="https://www.youtube.com/watch?v=xl9R8aTOW_I">It's viewports all the way down | HTTP 203</a>
     </div>
 </body>
 
