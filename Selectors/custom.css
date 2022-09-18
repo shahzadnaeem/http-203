@@ -1,0 +1,55 @@
+:root {
+    --bg: rgb(144, 144, 144);
+    --border: black;
+    --bg-div: rgb(72, 72, 225);
+    --fg-white: white;
+    --fg-yellow: yellow;
+    --bg-odd: rgb(178, 34, 34, 0.8);
+    --bg-even: rgba(34, 178, 94, 0.8);
+    --bg-3rd-p: rgb(207, 119, 226);
+}
+
+body {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+    background-color: var(--bg);
+}
+
+h1 {
+    margin-bottom: 0.5rem;
+    text-decoration: underline;
+}
+
+h2 {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+div {
+    background-color: var(--bg-div);
+    color: var(--fg-white);
+    border-top: 1px solid var(--border);
+    padding: 0.5rem;
+}
+
+div.odd {
+    background-color: var(--bg-odd);
+}
+
+div.even {
+    background-color: var(--bg-even);
+}
+
+div>p:nth-of-type(3) {
+    background-color: var(--bg-3rd-p);
+    color: black;
+}
+
+p:nth-of-type(2) {
+    color: var(--fg-yellow);
+}
+
+#article {
+    border: 1px solid var(--border);
+    padding: 1.0rem;
+}
