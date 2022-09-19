@@ -1,18 +1,22 @@
 :root {
     --bg: rgb(144, 144, 144);
-    --border: black;
+    --fg: black;
+    --border: rgb(172, 255, 243);
+    --bd-2: rgb(223, 255, 223);
     --bg-div: rgb(72, 72, 225);
     --fg-white: white;
     --fg-yellow: yellow;
+    --fg-header: rgb(49, 14, 73);
     --bg-odd: rgb(178, 34, 34, 0.8);
     --bg-even: rgba(34, 178, 94, 0.8);
     --bg-3rd-p: rgb(207, 119, 226);
 }
 
 body {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
     background-color: var(--bg);
+    color: var(--fg);
 }
 
 h1 {
@@ -25,10 +29,21 @@ h2 {
     margin-bottom: 0.3rem;
 }
 
+header {
+    font-style: oblique;
+    font-weight: 700;
+    color: var(--fg-header);
+    margin-bottom: 0.25rem;
+}
+
+article {
+    border: 1px solid var(--border);
+    padding: 0.25rem;
+}
+
 div {
     background-color: var(--bg-div);
     color: var(--fg-white);
-    border-top: 1px solid var(--border);
     padding: 0.5rem;
 }
 
@@ -49,7 +64,16 @@ p:nth-of-type(2) {
     color: var(--fg-yellow);
 }
 
-#article {
-    border: 1px solid var(--border);
-    padding: 1.0rem;
+div:nth-child(even) {
+    font-size: 1.5rem;
+    border: 2px solid var(--bd-2);
+    margin-bottom: 0.75rem;
+}
+
+div:nth-child(even)::before {
+    content: 'even - ';
+}
+
+div+div {
+    margin-top: 0.25rem;
 }

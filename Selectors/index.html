@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template Document</title>
+    <title>Selectors</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="custom.css">
 </head>
@@ -14,7 +14,7 @@
     <h1>Selectors</h1>
     <h2>&lt;div&gt;</h2>
     <div>
-        <h3>#1</h3>
+        <h3>#0</h3>
         Raw &lt;div&gt; text
         <p>Paragraph 1</p>
         <p>Paragraph 2</p>
@@ -44,12 +44,22 @@
         <p>Paragraph 2</p>
         <p>Paragraph 3</p>
     </div>
-    <h2>&lt;article id="article"&gt;</h2>
-    <article id="article">
+    <h2>&lt;article&gt;</h2>
+    <article>
+        <header>p:nth-of-type(2): { color: var(--fg-yellow);}</header>
         <p>Paragraph 1</p>
         <p>Paragraph 2</p>
         <p>Paragraph 3</p>
     </article>
+
+    <h2>&lt;article&gt;</h2>
+    <article>
+        <div>div 1</div>
+        <div>div 2</div>
+        <div>div 3</div>
+        <div>div 4</div>
+    </article>
+
 </body>
 
 </html>
