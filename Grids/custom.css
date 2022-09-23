@@ -1,11 +1,27 @@
 :root {
-    --bg: rgb(255, 229, 113);
+    --intro-height: 6.5rem;
+    --bg: rgb(255, 253, 246);
+    --bg-main: rgb(7, 7, 40);
+    --bg-code: rgb(65, 67, 67);
+    --fg: firebrick;
+    --fg-main: lightyellow;
+    --fg-code: rgb(219, 219, 219);
+
 }
 
 body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 
     background-color: var(--bg);
+    color: var(--fg);
+}
+
+code {
+    background-color: var(--bg-code);
+    color: var(--fg-code);
+    padding: 0 0.25rem;
+    padding-bottom: 0.1rem;
+    font-weight: bold;
 }
 
 h1 {
@@ -14,5 +30,60 @@ h1 {
 }
 
 h3 {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.25rem;
 }
+
+p {
+    margin-bottom: 0.5rem;
+}
+
+main {
+    margin: 0;
+    padding: 0.5rem;
+    background-color: var(--bg-main);
+    color: var(--fg-main);
+}
+
+main > h1 {
+    text-align: center;
+}
+
+.nums {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    justify-items: center;
+  }
+  
+  /* Does not need to be flex or grid */
+  .numsSetContainer {
+    width: 100%;
+    border: 1px solid firebrick;
+    text-align: center;
+  }
+  
+  .numsSet {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 10px;
+    justify-items: center;
+  }
+  
+  .num {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid black;
+    background-color: beige;
+    color: darkgreen;
+    font-weight: bolder;
+    font-size: larger;
+    display: grid;
+    place-items: center;
+  }
+  
+  .alt {
+    background-color: cornsilk;
+    color: darkred;
+  }
+
