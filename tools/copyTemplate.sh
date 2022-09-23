@@ -16,7 +16,7 @@ TEMPLATE=$(dirname $SCRIPT_DIR)/Template
 TARGET=${1:-''}
 
 if [ ! "${TARGET}" ]; then
-    echo "ERROR: No target repo name provided!"
+    echo "ERROR: No target directory name provided!"
     exit 1
 fi
 
@@ -38,7 +38,7 @@ cp -a ${TEMPLATE} ${TARGET}
 # Tweak index.html
 
 TARGET_NAME=$(basename ${TARGET})
-sed -i -e "'s/Template Document/${TARGET_NAME}/g'" ${TARGET}/index.html
+sed -i -e "s/Template Document/${TARGET_NAME}/g" ${TARGET}/index.html
 
 # Done
 
