@@ -51,6 +51,8 @@ class Builder {
     return para;
   }
 
+  // A very basic start, init() still messy as a result
+
   nOf(n, itFn) {
     return Array(n).fill(itFn);
   }
