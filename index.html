@@ -65,9 +65,14 @@
         }
 
         .links-entry {
+            position: relative;
             display: flex;
             flex-direction: row;
             gap: 1.0rem;
+        }
+
+        .links-entry + img {
+            margin: 1.0rem;
         }
 
         .links-entry>a[href*="www.youtube.com"] {
@@ -101,8 +106,9 @@
     </div>
 
     <div class="links-entry">
-        <a href="http://127.0.0.1:5173">Tailwind CSS - Vite: <i>npm run dev needed</i></a>
+        <a href="http://127.0.0.1:5173">Tailwind CSS (it got out of hand!) - Vite: <i>npm run dev needed</i></a>
     </div>
+    <img src="./Tailwind.png" alt="Madness...">
 </body>
 
 </html>
