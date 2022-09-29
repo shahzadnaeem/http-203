@@ -1,5 +1,15 @@
 // Let's do it all here!
 
+//
+// This has become a bit of an experiment that I should have left alone!
+//
+// I wasted quite some time on an issue related to cloning nested <p>s
+// You can't create such a think in HTML but you can via JS
+// I foolishly got carried away with my Builder and cloning highlighted
+// an issue that I've detected but it makes no sense to try and fix it
+// so I am going to stop!
+//
+
 const uid = [0];
 
 class Builder {
