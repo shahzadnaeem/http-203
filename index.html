@@ -43,7 +43,7 @@
             --blue-bg: steelblue;
             --yellow-bg: rgb(240, 240, 213);
             --white: antiquewhite;
-            --link: rgb(4, 4, 93);
+            --link: darkblue;
             --alt-link: indigo;
         }
 
@@ -75,6 +75,9 @@
             margin: 1.0rem;
         }
 
+        .links-entry>a[href^="./"] {
+            color: var(--alt-link);
+        }
         .links-entry>a[href*="www.youtube.com"] {
             color: var(--alt-link);
         }
@@ -111,6 +114,7 @@
 
     <div class="links-entry">
         <a href="http://127.0.0.1:5173">Tailwind CSS (it got out of hand!) - Vite: <i>npm run dev needed</i></a>
+        <a href="./Tailwind/index.html">Tailwind</a>
     </div>
     <img src="./Tailwind.png" alt="Madness...">
 </body>
