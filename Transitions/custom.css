@@ -1,8 +1,9 @@
 :root {
     --bg: rgb(12, 12, 12);
     --fg: rgba(65, 71, 65, 0.8);
-    --fg-mat: rgba(90, 194, 90, 0.821);
-    /* --fg-mat: rgba(2, 23, 2, 0.821); */
+    --fg-mat: rgba(5, 34, 5, 0.879);
+    --fg-mat-fade: rgba(99, 221, 38, 0.821);
+    --font-size: 32px;
 }
 
 body {
@@ -11,14 +12,15 @@ body {
     background-color: var(--bg);
     color: var(--fg);
     text-align: center;
-    /* TODO: Why does adding this cause an overflow/scrollbar to appear? */
     height: 100vh;
 }
 
 #main {
+    font-size: var(--font-size);
     /* We want 40 chars wide */
-    max-width: calc(32px * 40 + 4px);
-    font-size: 32px;
+    max-width: calc(var(--font-size) * 40 + 4px);
+    /* We want 40 rows */
+    height: calc(var(--font-size) * 40);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(32px, 32px));
@@ -28,10 +30,16 @@ body {
     gap: 0px;
 }
 
-#main > span {
+span {
     color: var(--fg-mat);
     width: 32px;
     height: 32px;
+    transition: color 500ms ease-in;
+}
+
+span.fade {
+    color: var(--fg-mat-fade);
+    transition: color 250ms ease-in;
 }
 
 h1 {
