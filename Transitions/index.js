@@ -21,6 +21,8 @@ let activeElems = [];
 
 // TODO: Make this a frame based animation and manually adjust each cell per frame
 
+const HIDDEN_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
+
 function fadeElement(el) {}
 
 function addFadingLine() {
@@ -28,30 +30,34 @@ function addFadingLine() {
   const start = Math.floor(Math.random() * SIZE);
   const length = SIZE - start; // Math.floor(Math.random() * (SIZE - start));
 
-  if (length !== 0) {
-    const offset = Math.floor(Math.random() * SIZE);
-    const delta = vertical ? SIZE : 1;
-    const startIdx = vertical ? SIZE * start + offset : SIZE * offset + start;
-    const delayDelta = 50;
+  const offset = Math.floor(Math.random() * SIZE);
+  const delta = vertical ? SIZE : 1;
+  const startIdx = vertical ? SIZE * start + offset : SIZE * offset + start;
+  const delayDelta = 50;
 
-    // Loop from the start to the end - vertical or horizontal
-    for (let i = start; i < start + length; i++) {
-      const idx = startIdx + (i - start) * delta;
+  // Loop from the start to the end - vertical or horizontal
+  for (let i = start; i < start + length; i++) {
+    const idx = startIdx + (i - start) * delta;
 
-      const el = charElems[idx];
+    const el = charElems[idx];
 
-      setTimeout(() => {
-        el.textContent = randomChar();
-        el.classList.add("fade");
+    setTimeout(() => {
+      el.textContent = HIDDEN_MESSAGE[i - start];
+      el.classList.add("fade");
 
-        activeElems[idx] = setTimeout(() => {
-          activeElems[idx] = false;
-          el.classList.remove("fade");
-        }, delayDelta * length / 2);
-      }, (i - start) * delayDelta);
-    }
-  } else {
-    console.log(`addFadingLine: length === 0!`);
+      // Add random char updates
+      for (let i = 1; i <= 5; i++) {
+        setTimeout(() => {
+          el.textContent = randomChar();
+        }, 650 + delayDelta * i);
+      }
+
+      // Finalise by removing 'fade'
+      activeElems[idx] = setTimeout(() => {
+        activeElems[idx] = false;
+        el.classList.remove("fade");
+      }, (delayDelta * length) / 2);
+    }, (i - start) * delayDelta);
   }
 }
 
@@ -60,8 +66,10 @@ function randomCharChange() {
 
   for (let i = 0; i < BATCH_SIZE; i++) {
     const idx = Math.floor(Math.random() * charElems.length);
-    const el = charElems[idx];
-    el.textContent = randomChar();
+    if (!activeElems[idx]) {
+      const el = charElems[idx];
+      el.textContent = randomChar();
+    }
   }
 }
 
@@ -116,8 +124,6 @@ function init() {
     el.textContent = c;
     return el;
   });
-
-  // console.log(charElems)
 
   mainEl.append(...charElems);
 
