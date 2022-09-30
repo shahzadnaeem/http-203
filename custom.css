@@ -1,0 +1,50 @@
+
+:root {
+    --blue: blue;
+    --blue-bg: steelblue;
+    --yellow-bg: rgb(240, 240, 213);
+    --white: antiquewhite;
+    --link: darkblue;
+    --alt-link: indigo;
+}
+
+body {
+    margin-left: 0.5rem;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    background-color: var(--yellow-bg);
+}
+
+h1 {
+    margin-bottom: 0.5rem;
+}
+
+a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: var(--link);
+    font-weight: 600;
+}
+
+.links-entry {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 1.0rem;
+}
+
+.links-entry + img {
+    margin: 1.0rem;
+}
+
+.links-entry>a[href^="./"] {
+    color: var(--alt-link);
+}
+.links-entry>a[href*="www.youtube.com"] {
+    color: var(--alt-link);
+}
+
+.links-entry>a[href*="www.youtube.com"]::after {
+    content: ' ⮵ YouTube';
+}

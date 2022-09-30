@@ -5,88 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="custom.css">
+
     <title>http-203 and related stuff</title>
-
-    <style>
-        *,
-        *:before,
-        *:after {
-            box-sizing: border-box;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        div,
-        p,
-        ol,
-        ul {
-            margin: 0;
-            padding: 0;
-        }
-
-        ol,
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        :root {
-            --blue: blue;
-            --blue-bg: steelblue;
-            --yellow-bg: rgb(240, 240, 213);
-            --white: antiquewhite;
-            --link: darkblue;
-            --alt-link: indigo;
-        }
-
-        body {
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-
-            background-color: var(--yellow-bg);
-        }
-
-        h1 {
-            margin-bottom: 0.5rem;
-        }
-
-        a {
-            font-size: 1.5rem;
-            text-decoration: none;
-            color: var(--link);
-            font-weight: 600;
-        }
-
-        .links-entry {
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            gap: 1.0rem;
-        }
-
-        .links-entry + img {
-            margin: 1.0rem;
-        }
-
-        .links-entry>a[href^="./"] {
-            color: var(--alt-link);
-        }
-        .links-entry>a[href*="www.youtube.com"] {
-            color: var(--alt-link);
-        }
-
-        .links-entry>a[href*="www.youtube.com"]::after {
-            content: ' ⮵ YouTube';
-        }
-    </style>
-
 </head>
 
 <body>
@@ -110,6 +32,10 @@
 
     <div class="links-entry">
         <a href="Grids/index.html">Grids demo</a>
+    </div>
+
+    <div class="links-entry">
+        <a href="Transitions/index.html">Transitions (Matrix!) demo</a>
     </div>
 
     <div class="links-entry">
