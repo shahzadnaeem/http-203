@@ -25,14 +25,14 @@ let activeElems = [];
 const SECRET_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
 const FADE_IN = 350; // From custom.css!
 const FADE_OUT = 250;
-const VISIBLE = 850 - FADE_OUT;
+const VISIBLE = 700 - FADE_OUT;
 const PRE_DUR = 300;
 
 function fadeElement(el) {}
 
 function addFadingLine() {
   const vertical = bothDirectionsMatrix ? Math.random() > 0.5 : true;
-  const start = Math.floor(Math.random() * SIZE);
+  const start = Math.floor(Math.random() * SIZE / 2);
   const length = SIZE - start; // Math.floor(Math.random() * (SIZE - start));
 
   const offset = Math.floor(Math.random() * SIZE);
