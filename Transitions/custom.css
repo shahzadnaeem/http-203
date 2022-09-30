@@ -2,7 +2,7 @@
     --bg: rgb(12, 12, 12);
     --fg: rgba(65, 71, 65, 0.8);
     --fg-mat: rgba(5, 34, 5, 0.879);
-    --fg-mat-fade: rgba(99, 221, 38, 0.821);
+    --fg-mat-fade: rgba(66, 255, 211, 0.821);
     --font-size: 32px;
 }
 
@@ -24,7 +24,6 @@ body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(32px, 32px));
-    /* border: 1px solid yellow; */
     justify-content: start;
     align-content: start;
     gap: 0px;
@@ -34,12 +33,14 @@ span {
     color: var(--fg-mat);
     width: 32px;
     height: 32px;
-    transition: color 500ms ease-in;
+    transition: color 350ms ease-out;
+    filter: blur(1.1px);
 }
 
 span.fade {
     color: var(--fg-mat-fade);
-    transition: color 250ms ease-in;
+    transition: color 500ms linear;
+    filter: blur(0);
 }
 
 h1 {

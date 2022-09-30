@@ -32,7 +32,6 @@ function addFadingLine() {
     const offset = Math.floor(Math.random() * SIZE);
     const delta = vertical ? SIZE : 1;
     const startIdx = vertical ? SIZE * start + offset : SIZE * offset + start;
-    const startDelay = 10;
     const delayDelta = 50;
 
     // Loop from the start to the end - vertical or horizontal
@@ -48,9 +47,8 @@ function addFadingLine() {
         activeElems[idx] = setTimeout(() => {
           activeElems[idx] = false;
           el.classList.remove("fade");
-          el.textContent = randomChar();
-        }, 300);
-      }, startDelay + (i - start) * delayDelta);
+        }, delayDelta * length / 2);
+      }, (i - start) * delayDelta);
     }
   } else {
     console.log(`addFadingLine: length === 0!`);
@@ -58,7 +56,9 @@ function addFadingLine() {
 }
 
 function randomCharChange() {
-  for (let i = 0; i < 10; i++) {
+  const BATCH_SIZE = 10;
+
+  for (let i = 0; i < BATCH_SIZE; i++) {
     const idx = Math.floor(Math.random() * charElems.length);
     const el = charElems[idx];
     el.textContent = randomChar();
@@ -69,7 +69,7 @@ function randomCharChange() {
 
 let addFadingLineInterval = false;
 let randomCharChangeInterval = false;
-let bothDirectionsMatrix = true;
+let bothDirectionsMatrix = false;
 
 function init() {
   console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
@@ -123,7 +123,7 @@ function init() {
 
   activeElems = chars.map((c) => false);
 
-  addFadingLineInterval = setInterval(addFadingLine, 30);
+  addFadingLineInterval = setInterval(addFadingLine, 50);
   randomCharChangeInterval = setInterval(randomCharChange, 10);
 }
 
