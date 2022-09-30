@@ -25,7 +25,7 @@ let activeElems = [];
 const SECRET_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
 const FADE_IN = 350; // From custom.css!
 const FADE_OUT = 250;
-const VISIBLE = 700 - FADE_OUT;
+const VISIBLE = 650 - FADE_OUT;
 const PRE_DUR = 300;
 
 function fadeElement(el) {}
