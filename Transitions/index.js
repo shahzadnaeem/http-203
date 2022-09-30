@@ -22,6 +22,10 @@ let activeElems = [];
 // TODO: Make this a frame based animation and manually adjust each cell per frame
 
 const HIDDEN_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
+const FADE_IN = 350;    // From custom.css!
+const FADE_OUT = 250;
+const VISIBLE = 850 - FADE_OUT;
+const PRE_DUR = 300;
 
 function fadeElement(el) {}
 
@@ -41,23 +45,25 @@ function addFadingLine() {
 
     const el = charElems[idx];
 
+    const activationDelay = (i - start) * delayDelta;
+
     setTimeout(() => {
       el.textContent = HIDDEN_MESSAGE[i - start];
       el.classList.add("fade");
 
-      // Add random char updates
-      for (let i = 1; i <= 5; i++) {
+      // Add random char updates - after fading
+      for (let i = 1; i <= Math.floor(PRE_DUR/delayDelta); i++) {
         setTimeout(() => {
           el.textContent = randomChar();
-        }, 650 + delayDelta * i);
+        }, activationDelay + delayDelta * i + FADE_IN);
       }
 
       // Finalise by removing 'fade'
       activeElems[idx] = setTimeout(() => {
         activeElems[idx] = false;
         el.classList.remove("fade");
-      }, (delayDelta * length) / 2);
-    }, (i - start) * delayDelta);
+      }, VISIBLE);
+    }, activationDelay);
   }
 }
 
