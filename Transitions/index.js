@@ -1,5 +1,6 @@
 const mainEl = document.querySelector("#main");
 const bothDirectionsCheckEl = document.querySelector("#bothDirections");
+const secretMessageCheckEl = document.querySelector("#secretMessage");
 
 const FIRSTRANDCHAR = 33;
 const LASTRANDCHAR = 96;
@@ -21,8 +22,8 @@ let activeElems = [];
 
 // TODO: Make this a frame based animation and manually adjust each cell per frame
 
-const HIDDEN_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
-const FADE_IN = 350;    // From custom.css!
+const SECRET_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
+const FADE_IN = 350; // From custom.css!
 const FADE_OUT = 250;
 const VISIBLE = 850 - FADE_OUT;
 const PRE_DUR = 300;
@@ -48,11 +49,16 @@ function addFadingLine() {
     const activationDelay = (i - start) * delayDelta;
 
     setTimeout(() => {
-      el.textContent = HIDDEN_MESSAGE[i - start];
-      el.classList.add("fade");
+      if (secretMessage) {
+        el.textContent = SECRET_MESSAGE[i - start];
+      } else {
+        el.textContent = randomChar();
+      }
+
+      // el.classList.add("fade");
 
       // Add random char updates - after fading
-      for (let i = 1; i <= Math.floor(PRE_DUR/delayDelta); i++) {
+      for (let i = 1; i <= Math.floor(PRE_DUR / delayDelta); i++) {
         setTimeout(() => {
           el.textContent = randomChar();
         }, activationDelay + delayDelta * i + FADE_IN);
@@ -64,6 +70,17 @@ function addFadingLine() {
         el.classList.remove("fade");
       }, VISIBLE);
     }, activationDelay);
+
+    // Add pre start random char updates
+    const numTimeouts = Math.floor(PRE_DUR / delayDelta);
+    for (let i = 1; i <= numTimeouts; i++) {
+      setTimeout(() => {
+        if ( i > numTimeouts / 2 ) {
+          el.classList.add("fade");
+        }
+        el.textContent = randomChar();
+      }, activationDelay - PRE_DUR * 1.5 + delayDelta * i);
+    }
   }
 }
 
@@ -84,6 +101,7 @@ function randomCharChange() {
 let addFadingLineInterval = false;
 let randomCharChangeInterval = false;
 let bothDirectionsMatrix = false;
+let secretMessage = false;
 
 function init() {
   console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
@@ -98,6 +116,8 @@ function init() {
     randomCharChangeInterval = false;
   }
 
+  // --------------------------------------------------------------------------
+
   bothDirectionsCheckEl.checked = bothDirectionsMatrix;
 
   function bothDirectionsListener(ev) {
@@ -107,6 +127,20 @@ function init() {
   }
 
   bothDirectionsCheckEl.addEventListener("change", bothDirectionsListener);
+
+  // --------------------------------------------------------------------------
+
+  secretMessageCheckEl.checked = secretMessage;
+
+  function secretMessageListener(ev) {
+    secretMessage = ev.target.checked;
+    secretMessageCheckEl.removeEventListener("change", secretMessageListener);
+    init();
+  }
+
+  secretMessageCheckEl.addEventListener("change", secretMessageListener);
+
+  // --------------------------------------------------------------------------
 
   const CALC_XSZ = Math.floor(mainEl.clientWidth / ITEMSZ);
   const XSZ = CALC_XSZ; // SIZE;
