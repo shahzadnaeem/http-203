@@ -1,6 +1,4 @@
 const mainEl = document.querySelector("#main");
-const bothDirectionsCheckEl = document.querySelector("#bothDirections");
-const secretMessageCheckEl = document.querySelector("#secretMessage");
 
 const FIRSTRANDCHAR = 33;
 const LASTRANDCHAR = 96;
@@ -16,7 +14,24 @@ function randomChar() {
 
 let chars = [];
 let charElems = [];
-let activeElems = [];
+let activeElems = [];   // Elements with something going on
+
+const STATES = {
+  IDLE: "IDLE",
+  FADE_IN: "FADING_IN",
+  FADE_OUT: "FADING_OUT"
+}
+
+
+class Element {
+  constructor(id) {
+    this.id = id;
+    this.active = false;
+    this.activeFrame = 0;
+    this.frames = 0;
+    this.state = STATES.IDLE;
+  }
+}
 
 // ----------------------------------------------------------------------------
 
@@ -84,10 +99,10 @@ function addFadingLine() {
   }
 }
 
-function randomCharChange() {
-  const BATCH_SIZE = 10;
+const DEFAULT_RANDOM_CHARS_TO_CHANGE = 10;
 
-  for (let i = 0; i < BATCH_SIZE; i++) {
+function randomCharChange(numChars = DEFAULT_RANDOM_CHARS_TO_CHANGE) {
+  for (let i = 0; i < numChars; i++) {
     const idx = Math.floor(Math.random() * charElems.length);
     if (!activeElems[idx]) {
       const el = charElems[idx];
@@ -98,50 +113,72 @@ function randomCharChange() {
 
 // ----------------------------------------------------------------------------
 
-let addFadingLineInterval = false;
-let randomCharChangeInterval = false;
-let bothDirectionsMatrix = false;
-let secretMessage = false;
+const optionsEls = [];
 
-function init() {
-  console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
+const resetEl = document.querySelector('#reset');
 
-  mainEl.innerHTML = "";
-  if (addFadingLineInterval) {
-    clearInterval(addFadingLineInterval);
-    addFadingLineInterval = false;
-  }
-  if (randomCharChangeInterval) {
-    clearInterval(randomCharChangeInterval);
-    randomCharChangeInterval = false;
+// const bothDirectionsCheckEl = document.querySelector("#bothDirections");
+// const secretMessageCheckEl = document.querySelector("#secretMessage")
+
+let animateInterval = false;
+
+// let bothDirectionsMatrix = false;
+// let secretMessage = false;
+
+function initControls() {
+  if (animateInterval) {
+    clearInterval(animateInterval);
+    animateInterval = false;
   }
 
   // --------------------------------------------------------------------------
 
-  bothDirectionsCheckEl.checked = bothDirectionsMatrix;
-
-  function bothDirectionsListener(ev) {
-    bothDirectionsMatrix = ev.target.checked;
-    bothDirectionsCheckEl.removeEventListener("change", bothDirectionsListener);
+  function resetListener() {
     init();
   }
 
-  bothDirectionsCheckEl.addEventListener("change", bothDirectionsListener);
+  resetEl.addEventListener('click', resetListener);
 
   // --------------------------------------------------------------------------
 
-  secretMessageCheckEl.checked = secretMessage;
+  // bothDirectionsCheckEl.checked = bothDirectionsMatrix;
 
-  function secretMessageListener(ev) {
-    secretMessage = ev.target.checked;
-    secretMessageCheckEl.removeEventListener("change", secretMessageListener);
-    init();
-  }
+  // function bothDirectionsListener(ev) {
+  //   bothDirectionsMatrix = ev.target.checked;
+  //   bothDirectionsCheckEl.removeEventListener("change", bothDirectionsListener);
+  //   init();
+  // }
 
-  secretMessageCheckEl.addEventListener("change", secretMessageListener);
+  // bothDirectionsCheckEl.addEventListener("change", bothDirectionsListener);
 
-  // --------------------------------------------------------------------------
+  // // --------------------------------------------------------------------------
 
+  // secretMessageCheckEl.checked = secretMessage;
+
+  // function secretMessageListener(ev) {
+  //   secretMessage = ev.target.checked;
+  //   secretMessageCheckEl.removeEventListener("change", secretMessageListener);
+  //   init();
+  // }
+
+  // secretMessageCheckEl.addEventListener("change", secretMessageListener);
+}
+
+// ----------------------------------------------------------------------------
+
+function focusListener(ev) {
+  ev.target.classList.add('fade');
+}
+
+function blurListener(ev) {
+  const BLUR_DELAY = 20 * frameInterval;
+
+  setTimeout(() => {
+    ev.target.classList.remove('fade');
+  }, BLUR_DELAY)
+}
+
+function initDisplay() {
   const CALC_XSZ = Math.floor(mainEl.clientWidth / ITEMSZ);
   const XSZ = CALC_XSZ; // SIZE;
   const CALC_YSZ = Math.floor(mainEl.clientHeight / ITEMSZ);
@@ -161,16 +198,57 @@ function init() {
 
   charElems = chars.map((c) => {
     const el = document.createElement("span");
+
+    el.addEventListener('mouseover', focusListener);
+    el.addEventListener('mouseleave', blurListener);
+
     el.textContent = c;
+
     return el;
   });
 
   mainEl.append(...charElems);
 
-  activeElems = chars.map((c) => false);
+  setTimeout( () => {
+    charElems.forEach(el => el.classList.add('new'));
 
-  addFadingLineInterval = setInterval(addFadingLine, 50);
-  randomCharChangeInterval = setInterval(randomCharChange, 10);
+    setTimeout( () => {
+      // Remove or this prevents 'fade' from working
+      charElems.forEach(el => el.classList.remove('new'));
+    }, 1000);
+  }, 300);
+
+  activeElems = chars.map((c) => false);
+}
+
+// ----------------------------------------------------------------------------
+
+let framesPerSecond = 25;
+let frameInterval = Math.floor(1000/framesPerSecond);
+
+function calcFrameDelay(n) {
+  return n * frameInterval;
+}
+
+
+function init() {
+  console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
+
+  mainEl.innerHTML = "";
+
+  initControls();
+
+  initDisplay();
+
+  // --------------------------------------------------------------------------
+
+  animateInterval = setInterval(animate, frameInterval);
+}
+
+// ----------------------------------------------------------------------------
+
+function animate() {
+  randomCharChange();
 }
 
 // ----------------------------------------------------------------------------
