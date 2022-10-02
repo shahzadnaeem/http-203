@@ -36,21 +36,32 @@ span {
     width: 32px;
     height: 32px;
     filter: blur(1.3px);
+    cursor: default;
+    transition: color 500ms ease-in;
 }
 
 span.new {
-    animation: animate-mat-start 1s both;
+    animation: animate-mat-start 1s forwards;
 }
 
 @keyframes animate-mat-start {
-    0% { color: var(--fg-mat-start); }
-    20% { color: var(--fg-mat-peak); }
-    100% { color: var(--fg-mat); }
+    0% {
+        color: var(--fg-mat-start);
+    }
+
+    20% {
+        color: var(--fg-mat-peak);
+        filter: blur(0);
+    }
+
+    100% {
+        color: var(--fg-mat);
+    }
 }
 
 span.fade {
     color: var(--fg-mat-fade);
-    transition: color 350ms linear;
+    transition: color 500ms ease-in;
     filter: blur(0);
 }
 
