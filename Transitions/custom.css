@@ -6,6 +6,9 @@
     --fg-mat-peak: rgb(255, 255, 255);
     --fg-mat-fade: rgba(43, 211, 37, 0.8);
     --font-size: 32px;
+    /* Number of chars per row/column */
+    --chars-per: 40;
+    --chars_fudge: 4px;
 }
 
 body {
@@ -19,15 +22,13 @@ body {
 
 #main {
     font-size: var(--font-size);
-    /* We want 40 chars wide */
-    max-width: calc(var(--font-size) * 40 + 4px);
-    /* We want 40 rows */
-    height: calc(var(--font-size) * 40);
+    max-width: calc(var(--font-size) * var(--chars-per) + var(--chars_fudge));
+    height: calc(var(--font-size) * var(--chars-per));
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(32px, 32px));
-    justify-content: start;
-    align-content: start;
+    justify-content: center;
+    align-content: center;
     gap: 0px;
 }
 

@@ -234,6 +234,9 @@ function calcFrameDelay(n) {
 function init() {
   console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
 
+  const rootFontSize = getComputedStyle(document.documentElement).getPropertyValue('--font-size');
+  console.log(`:root --fontsize = ${rootFontSize}`);
+
   mainEl.innerHTML = "";
 
   initControls();
