@@ -17,6 +17,22 @@ const NUMITEMS = XSZ * YSZ;
 const FIRSTRANDCHAR = 33;
 const LASTRANDCHAR = 96;
 
+let chars = Array(NUMITEMS)
+  .fill()
+  .map((_, i) => randomChar());
+
+let elements = [];
+let matrixes = [];
+
+let running = false;
+let paused = true;
+let frameNo = 0;
+
+let bothDirectionsMatrix = false;
+let secretMessage = false;
+
+// ----------------------------------------------------------------------------
+
 function randomChar() {
   return String.fromCharCode(
     Math.floor(Math.random() * (LASTRANDCHAR - FIRSTRANDCHAR) + FIRSTRANDCHAR)
@@ -24,9 +40,8 @@ function randomChar() {
 }
 
 class Element {
-  constructor(id, char, el) {
+  constructor(id, el) {
     this.id = id;
-    this.char = char;
     this.el = el;
   }
 }
@@ -44,8 +59,6 @@ class Matrix {
     this.onPos = 0;
     this.offDelay = 10;
     this.offPos = 0;
-    // this.restoreDelay = 10;
-    // this.restorePos = 0;
     this.done = false;
     this.frameNo = -1;
     this.updateCount = 0;
@@ -110,23 +123,7 @@ class Matrix {
   }
 }
 
-let chars = Array(NUMITEMS)
-  .fill()
-  .map((_, i) => randomChar());
-
-let elements = [];
-let matrixes = [];
-
-let running = false;
-let paused = true;
-let frameNo = 0;
-
-let bothDirectionsMatrix = false;
-let secretMessage = false;
-
 // ----------------------------------------------------------------------------
-
-// TODO: Make this a frame based animation and manually adjust each cell per frame
 
 const SECRET_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
 
@@ -275,7 +272,7 @@ function initDisplay() {
 
     el.textContent = c;
 
-    elements.push(new Element(id, c, el));
+    elements.push(new Element(id, el));
 
     return el;
   });
@@ -306,6 +303,8 @@ function calcFrameDelay(n) {
 function secondsToFrames(n) {
   return n * framesPerSecond;
 }
+
+// ----------------------------------------------------------------------------
 
 function init() {
   console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
