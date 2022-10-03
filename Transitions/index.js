@@ -1,10 +1,21 @@
 const mainEl = document.querySelector("#main");
-
-const FIRSTRANDCHAR = 33;
-const LASTRANDCHAR = 96;
+const controlsEl = document.querySelector("#controls");
+const resetEl = document.querySelector("#reset");
+const pauseEl = document.querySelector("#pause");
+const bothDirectionsCheckEl = document.querySelector("#bothDirections");
+const secretMessageCheckEl = document.querySelector("#secretMessage");
 
 const SIZE = 40;
 const ITEMSZ = 32;
+
+const CALC_XSZ = Math.floor(mainEl.clientWidth / ITEMSZ);
+const XSZ = CALC_XSZ; // SIZE;
+const CALC_YSZ = Math.floor(mainEl.clientHeight / ITEMSZ);
+const YSZ = CALC_YSZ; // SIZE;
+const NUMITEMS = XSZ * YSZ;
+
+const FIRSTRANDCHAR = 33;
+const LASTRANDCHAR = 96;
 
 function randomChar() {
   return String.fromCharCode(
@@ -12,118 +23,198 @@ function randomChar() {
   );
 }
 
-let chars = [];
-let charElems = [];
-let activeElems = [];   // Elements with something going on
-
-const STATES = {
-  IDLE: "IDLE",
-  FADE_IN: "FADING_IN",
-  FADE_OUT: "FADING_OUT"
-}
-
-
 class Element {
-  constructor(id) {
+  constructor(id, char, el) {
     this.id = id;
-    this.active = false;
-    this.activeFrame = 0;
-    this.frames = 0;
-    this.state = STATES.IDLE;
+    this.char = char;
+    this.el = el;
   }
 }
+
+class Matrix {
+  static UPDATE_FREQ = 1;
+
+  constructor(startIdx, length, delta, elements) {
+    this.startIdx = startIdx;
+    this.length = length;
+    this.delta = delta;
+
+    this.elements = elements;
+
+    this.onPos = 0;
+    this.offDelay = 10;
+    this.offPos = 0;
+    // this.restoreDelay = 10;
+    // this.restorePos = 0;
+    this.done = false;
+    this.frameNo = -1;
+    this.updateCount = 0;
+    this.lastTick = 0;
+  }
+
+  tick() {
+    if (!this.done) {
+      this.frameNo++;
+      if (this.frameNo % Matrix.UPDATE_FREQ === 0) {
+        this.updateCount++;
+
+        let incOn = false;
+        let incOff = false;
+
+        if (this.onPos < this.length) {
+          const onIdx = this.startIdx + this.onPos * this.delta;
+          const onEl = this.elements[onIdx].el;
+          if (secretMessage) {
+            onEl.textContent = SECRET_MESSAGE[this.onPos];
+          } else {
+            onEl.textContent = randomChar();
+          }
+
+          onEl.classList.add("fade");
+          incOn = true;
+        }
+
+        if (
+          this.onPos > 0 &&
+          this.offDelay-- < 0 &&
+          this.offPos < this.length
+        ) {
+          const offIdx = this.startIdx + this.offPos * this.delta;
+          const offEl = this.elements[offIdx].el;
+          offEl.textContent = randomChar();
+          offEl.classList.remove("fade");
+          incOff = true;
+        }
+
+        if (this.offPos > 0) {
+          // Mush up the chars!
+          for (let i = this.offPos; i < this.onPos; i++) {
+            if (Math.random() <= 0.3 || i > this.onPos - 3) {
+              const idx = this.startIdx + i * this.delta;
+              const el = this.elements[idx].el;
+              if (!secretMessage) {
+                el.textContent = randomChar();
+              }
+            }
+          }
+        }
+
+        if (incOn) this.onPos++;
+        if (incOff) this.offPos++;
+
+        this.done = this.offPos === this.length;
+      }
+    }
+
+    return this.done;
+  }
+}
+
+let chars = Array(NUMITEMS)
+  .fill()
+  .map((_, i) => randomChar());
+
+let elements = [];
+let matrixes = [];
+
+let running = false;
+let paused = true;
+let frameNo = 0;
+
+let bothDirectionsMatrix = false;
+let secretMessage = false;
 
 // ----------------------------------------------------------------------------
 
 // TODO: Make this a frame based animation and manually adjust each cell per frame
 
 const SECRET_MESSAGE = "Iman Iman Iman Iman Iman Iman Iman Iman ";
-const FADE_IN = 350; // From custom.css!
-const FADE_OUT = 250;
-const VISIBLE = 650 - FADE_OUT;
-const PRE_DUR = 300;
 
-function fadeElement(el) {}
+function addRandomMatrix() {
+  const FRAMES_PER_ADD = 3;
 
-function addFadingLine() {
-  const vertical = bothDirectionsMatrix ? Math.random() > 0.5 : true;
-  const start = Math.floor(Math.random() * SIZE / 2);
-  const length = SIZE - start; // Math.floor(Math.random() * (SIZE - start));
+  if (frameNo % FRAMES_PER_ADD === 0) {
+    const vertical = bothDirectionsMatrix ? Math.random() > 0.5 : true;
+    const start = Math.floor((Math.random() * SIZE) / 2);
+    const length = SIZE - start; // Math.floor(Math.random() * (SIZE - start));
 
-  const offset = Math.floor(Math.random() * SIZE);
-  const delta = vertical ? SIZE : 1;
-  const startIdx = vertical ? SIZE * start + offset : SIZE * offset + start;
-  const delayDelta = 50;
+    const offset = Math.floor(Math.random() * SIZE);
+    const delta = vertical ? SIZE : 1;
+    const startIdx = vertical ? SIZE * start + offset : SIZE * offset + start;
 
-  // Loop from the start to the end - vertical or horizontal
-  for (let i = start; i < start + length; i++) {
-    const idx = startIdx + (i - start) * delta;
+    const matrix = new Matrix(startIdx, length, delta, elements);
 
-    const el = charElems[idx];
+    // console.log(`Added Matrix(${startIdx}, ${length}, ${delta})`);
 
-    const activationDelay = (i - start) * delayDelta;
-
-    setTimeout(() => {
-      if (secretMessage) {
-        el.textContent = SECRET_MESSAGE[i - start];
-      } else {
-        el.textContent = randomChar();
-      }
-
-      // el.classList.add("fade");
-
-      // Add random char updates - after fading
-      for (let i = 1; i <= Math.floor(PRE_DUR / delayDelta); i++) {
-        setTimeout(() => {
-          el.textContent = randomChar();
-        }, activationDelay + delayDelta * i + FADE_IN);
-      }
-
-      // Finalise by removing 'fade'
-      activeElems[idx] = setTimeout(() => {
-        activeElems[idx] = false;
-        el.classList.remove("fade");
-      }, VISIBLE);
-    }, activationDelay);
-
-    // Add pre start random char updates
-    const numTimeouts = Math.floor(PRE_DUR / delayDelta);
-    for (let i = 1; i <= numTimeouts; i++) {
-      setTimeout(() => {
-        if ( i > numTimeouts / 2 ) {
-          el.classList.add("fade");
-        }
-        el.textContent = randomChar();
-      }, activationDelay - PRE_DUR * 1.5 + delayDelta * i);
-    }
+    matrixes.push(matrix);
   }
 }
 
-const DEFAULT_RANDOM_CHARS_TO_CHANGE = 10;
+function updateMatrixes() {
+  if (matrixes.length) {
+    const startCount = matrixes.length;
+    let someDone = false;
 
-function randomCharChange(numChars = DEFAULT_RANDOM_CHARS_TO_CHANGE) {
-  for (let i = 0; i < numChars; i++) {
-    const idx = Math.floor(Math.random() * charElems.length);
-    if (!activeElems[idx]) {
-      const el = charElems[idx];
-      el.textContent = randomChar();
+    matrixes.forEach((mtx) => {
+      if (mtx.tick()) someDone = true;
+    });
+
+    if (someDone) {
+      matrixes = matrixes.filter((mat) => !mat.done);
     }
   }
 }
 
 // ----------------------------------------------------------------------------
 
-const optionsEls = [];
+function togglePaused() {
+  paused = !paused;
 
-const resetEl = document.querySelector('#reset');
+  if (paused) {
+    pauseEl.textContent = "Resume";
+  } else {
+    pauseEl.textContent = "Pause";
+  }
+}
 
-// const bothDirectionsCheckEl = document.querySelector("#bothDirections");
-// const secretMessageCheckEl = document.querySelector("#secretMessage")
+function startRunning() {
+  console.log(`startRunning(): START`);
+  running = true;
+
+  pauseEl.removeAttribute("disabled");
+  pauseEl.removeEventListener("click", togglePaused);
+  pauseEl.addEventListener("click", togglePaused);
+
+  paused = true;
+  togglePaused();
+  console.log(`startRunning(): END`);
+}
+
+function resetListener() {
+  bothDirectionsMatrix = false;
+  secretMessage = false;
+  init();
+}
 
 let animateInterval = false;
 
-// let bothDirectionsMatrix = false;
-// let secretMessage = false;
+// --------------------------------------------------------------------------
+
+function bothDirectionsListener(ev) {
+  bothDirectionsMatrix = ev.target.checked;
+  bothDirectionsCheckEl.removeEventListener("change", bothDirectionsListener);
+
+  init();
+}
+
+// --------------------------------------------------------------------------
+
+function secretMessageListener(ev) {
+  secretMessage = ev.target.checked;
+  secretMessageCheckEl.removeEventListener("change", secretMessageListener);
+
+  init();
+}
 
 function initControls() {
   if (animateInterval) {
@@ -133,58 +224,42 @@ function initControls() {
 
   // --------------------------------------------------------------------------
 
-  function resetListener() {
-    init();
-  }
+  resetEl.addEventListener("click", resetListener);
 
-  resetEl.addEventListener('click', resetListener);
+  bothDirectionsCheckEl.checked = bothDirectionsMatrix;
+  secretMessageCheckEl.checked = secretMessage;
 
-  // --------------------------------------------------------------------------
-
-  // bothDirectionsCheckEl.checked = bothDirectionsMatrix;
-
-  // function bothDirectionsListener(ev) {
-  //   bothDirectionsMatrix = ev.target.checked;
-  //   bothDirectionsCheckEl.removeEventListener("change", bothDirectionsListener);
-  //   init();
-  // }
-
-  // bothDirectionsCheckEl.addEventListener("change", bothDirectionsListener);
-
-  // // --------------------------------------------------------------------------
-
-  // secretMessageCheckEl.checked = secretMessage;
-
-  // function secretMessageListener(ev) {
-  //   secretMessage = ev.target.checked;
-  //   secretMessageCheckEl.removeEventListener("change", secretMessageListener);
-  //   init();
-  // }
-
-  // secretMessageCheckEl.addEventListener("change", secretMessageListener);
+  bothDirectionsCheckEl.addEventListener("change", bothDirectionsListener);
+  secretMessageCheckEl.addEventListener("change", secretMessageListener);
 }
 
 // ----------------------------------------------------------------------------
 
 function focusListener(ev) {
-  ev.target.classList.add('fade');
+  ev.target.classList.add("fade");
 }
 
 function blurListener(ev) {
   const BLUR_DELAY = 20 * frameInterval;
 
   setTimeout(() => {
-    ev.target.classList.remove('fade');
-  }, BLUR_DELAY)
+    ev.target.classList.remove("fade");
+  }, BLUR_DELAY);
 }
 
-function initDisplay() {
-  const CALC_XSZ = Math.floor(mainEl.clientWidth / ITEMSZ);
-  const XSZ = CALC_XSZ; // SIZE;
-  const CALC_YSZ = Math.floor(mainEl.clientHeight / ITEMSZ);
-  const YSZ = CALC_YSZ; // SIZE;
-  const NUMITEMS = XSZ * YSZ;
+function charBlipper(el) {
+  const BLIP_DELAY = 20 * frameInterval;
 
+  el.classList.add("blip");
+
+  setTimeout(() => {
+    el.classList.remove("blip");
+  }, BLIP_DELAY);
+}
+
+// ----------------------------------------------------------------------------
+
+function initDisplay() {
   console.log(
     `CALC_XSZ = ${CALC_XSZ}, CALC_YSZ = ${CALC_YSZ}, NUMITEMS' = ${
       CALC_XSZ * CALC_YSZ
@@ -192,52 +267,62 @@ function initDisplay() {
   );
   console.log(`XSZ = ${XSZ}, YSZ = ${YSZ}, NUMITEMS = ${NUMITEMS}`);
 
-  chars = Array(NUMITEMS)
-    .fill()
-    .map((_, i) => randomChar());
-
-  charElems = chars.map((c) => {
+  charElems = chars.map((c, id) => {
     const el = document.createElement("span");
 
-    el.addEventListener('mouseover', focusListener);
-    el.addEventListener('mouseleave', blurListener);
+    el.addEventListener("mouseover", focusListener);
+    el.addEventListener("mouseleave", blurListener);
 
     el.textContent = c;
+
+    elements.push(new Element(id, c, el));
 
     return el;
   });
 
   mainEl.append(...charElems);
 
-  setTimeout( () => {
-    charElems.forEach(el => el.classList.add('new'));
+  setTimeout(() => {
+    elements.forEach((elem) => elem.el.classList.add("new"));
 
-    setTimeout( () => {
+    setTimeout(() => {
       // Remove or this prevents 'fade' from working
-      charElems.forEach(el => el.classList.remove('new'));
+      elements.forEach((elem) => elem.el.classList.remove("new"));
+
+      startRunning();
     }, 1000);
   }, 300);
-
-  activeElems = chars.map((c) => false);
 }
 
 // ----------------------------------------------------------------------------
 
 let framesPerSecond = 25;
-let frameInterval = Math.floor(1000/framesPerSecond);
+let frameInterval = Math.floor(1000 / framesPerSecond);
 
 function calcFrameDelay(n) {
   return n * frameInterval;
 }
 
+function secondsToFrames(n) {
+  return n * framesPerSecond;
+}
 
 function init() {
   console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
 
-  const rootFontSize = getComputedStyle(document.documentElement).getPropertyValue('--font-size');
+  const rootFontSize = getComputedStyle(
+    document.documentElement
+  ).getPropertyValue("--font-size");
   console.log(`:root --fontsize = ${rootFontSize}`);
 
   mainEl.innerHTML = "";
+
+  elements = [];
+  matrixes = [];
+
+  running = false;
+  paused = true;
+  frameNo = 0;
 
   initControls();
 
@@ -250,8 +335,39 @@ function init() {
 
 // ----------------------------------------------------------------------------
 
+function getRandomElement() {
+  const idx = Math.floor(Math.random() * elements.length);
+  const elem = elements[idx];
+
+  return elem;
+}
+
+const DEFAULT_RANDOM_CHARS_TO_CHANGE = 3;
+
+function randomCharChange(numChars = DEFAULT_RANDOM_CHARS_TO_CHANGE) {
+  for (let i = 0; i < numChars; i++) {
+    const elem = getRandomElement();
+
+    if (!elem.active) {
+      if (Math.random() <= 0.1) {
+        charBlipper(elem.el);
+      }
+
+      elem.el.textContent = randomChar();
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+
 function animate() {
-  randomCharChange();
+  if (running && !paused) {
+    frameNo++;
+
+    randomCharChange();
+    addRandomMatrix();
+    updateMatrixes();
+  }
 }
 
 // ----------------------------------------------------------------------------

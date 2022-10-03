@@ -4,7 +4,8 @@
     --fg-mat: rgba(5, 34, 5, 0.879);
     --fg-mat-start: rgb(0, 0, 0);
     --fg-mat-peak: rgb(255, 255, 255);
-    --fg-mat-fade: rgba(43, 211, 37, 0.8);
+    --fg-mat-fade: rgba(43, 161, 39, 0.8);
+    --fg-blip: rgba(205, 211, 85, 0.815);
     --font-size: 32px;
     /* Number of chars per row/column */
     --chars-per: 40;
@@ -38,7 +39,7 @@ span {
     height: 32px;
     filter: blur(1.3px);
     cursor: default;
-    transition: color 500ms ease-in;
+    transition: color 200ms ease-in;
 }
 
 span.new {
@@ -62,21 +63,38 @@ span.new {
 
 span.fade {
     color: var(--fg-mat-fade);
-    transition: color 500ms ease-in;
+    transition: color 100ms ease-in;
     filter: blur(0);
 }
 
-#reset {
+span.blip {
+    animation: animate-blip 550ms forwards;
+}
+
+@keyframes animate-blip {
+    0% {
+        color: var(--fg-blip-start);
+    }
+
+    20% {
+        color: var(--fg-blip);
+    }
+
+    100% {
+        color: var(--fg-mat);
+    }
+}
+
+#reset, #pause {
     background-color: var(--bg);
-    color: var(--fg);
+    color: var(--fg-mat-fade);
     outline: none;
     border-radius: 1.0rem;
 }
 
-#reset:hover {
-    color: var(--fg-mat-fade);
+#reset:hover, #pause:hover {
+    color: var(--fg-mat-peak);
 }
-
 
 h1 {
     margin-bottom: 0.5rem;
