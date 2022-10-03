@@ -12,9 +12,11 @@ function init() {
     const maxY = mainEl.clientHeight;
 
     const SIZES = [
+        75,
+        100,
         150,
-        200,
-        250,
+        180,
+        220,
     ];
 
     const COLOURS = [
@@ -97,7 +99,10 @@ function init() {
         div.style.setProperty('width', `${size}px`);
         div.style.setProperty('font-size', `${size/20.0}rem`);
         div.style.setProperty('color', `${col}`);
-        div.style.setProperty('border', `${Math.floor(size/50)+2}px solid indigo`);
+
+        const borderWidth = Math.max( 5, Math.floor(size/35) )
+
+        div.style.setProperty('border', `${borderWidth}px solid indigo`);
 
         extents.push(rect);
 
