@@ -6,118 +6,124 @@ const END_NUM = 20;
 // ----------------------------------------------------------------------------
 
 function init() {
-    console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
+  console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
 
-    const maxX = mainEl.clientWidth;
-    const maxY = mainEl.clientHeight;
+  const maxX = mainEl.clientWidth;
+  const maxY = mainEl.clientHeight;
 
-    const SIZES = [
-        75,
-        100,
-        150,
-        180,
-        220,
-    ];
+  const SIZES = [75, 105, 145, 190, 225];
 
-    const COLOURS = [
-        "crimson",
-        "darkorange",
-        "darkred",
-        "darkgreen",
-        "rebeccapurple",
-        "navy",
-        "firebrick"
-    ];
+  const COLOURS = [
+    "crimson",
+    "darkorange",
+    "darkred",
+    "darkgreen",
+    "rebeccapurple",
+    "navy",
+    "firebrick",
+  ];
 
-    const extents = [];
+  const extents = [];
 
-    function randomFromArray(array) {
-        return array[ Math.floor(Math.random()*array.length)];
+  function randomFromArray(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  function nextSmallerFromArray(array, val) {
+    for (let i = array.length - 1; i >= 0; i--) {
+      if (array[i] < val) {
+        return array[i];
+      }
     }
+    return array[0];
+  }
 
-    function nextSmallerFromArray(array, val) {
-        for (let i = array.length - 1; i >=0;  i -- ) {
-            if ( array[i] < val ) {
-                return array[i];
-            }
+  function noOverlap(r1, r2) {
+    return r1.l > r2.r || r1.r < r2.l || r1.t > r2.b || r1.b < r2.t;
+  }
+
+  function isSafe(trial) {
+    if (extents.length === 0) return true;
+
+    return extents.every((ex) => {
+      return noOverlap(trial, ex);
+    });
+  }
+
+  function getNumElem(num) {
+    let size = randomFromArray(SIZES.slice(2)); // Start with larger sizes
+    const col = randomFromArray(COLOURS);
+
+    let x, y;
+    let safe;
+    let rect;
+    let tryLimit = 50;
+
+    do {
+      x = Math.floor(Math.random() * (maxX - size));
+      y = Math.floor(Math.random() * (maxY - size));
+
+      rect = { l: x, r: x + size, t: y, b: y + size, sz: size };
+
+      safe = isSafe(rect);
+
+      if (!safe) {
+        if (tryLimit % 10 === 0) {
+          size = nextSmallerFromArray(SIZES, size);
         }
-        return array[0];
-    }
+      }
 
-    function noOverlap( r1, r2 ) {
-        return r1.l > r2.r || r1.r < r2.l || r1.t > r2.b || r1.b < r2.t 
-    }
+      tryLimit--;
+      if (tryLimit === 0) {
+        console.log(`out of luck!: ${JSON.stringify(rect)} for ${num}`);
+        safe = true;
+      }
+    } while (!safe);
 
-    function isSafe(trial) {
-        if ( extents.length === 0 ) return true;
+    // console.log(`${num}: ${JSON.stringify(rect)}`);
 
-        return extents.every( ex => {
-            return noOverlap( trial, ex );
-        }); 
-    }
-    
-    function getNumElem(num) {
-        let size = randomFromArray(SIZES);
-        const col = randomFromArray(COLOURS);
+    const div = document.createElement("div");
+    div.textContent = num;
 
-        let x, y;
-        let safe;
-        let rect;
-        let tryLimit = 40;
+    div.style.setProperty("left", `${x}px`);
+    div.style.setProperty("top", `${y}px`);
+    div.style.setProperty("height", `${size}px`);
+    div.style.setProperty("width", `${size}px`);
 
-        do {
-            x = Math.floor(Math.random()*(maxX-size));
-            y = Math.floor(Math.random()*(maxY-size));
+    div.style.setProperty("font-size", `${size / 20.0}rem`);
+    div.style.setProperty("color", `${col}`);
 
-            rect = { l: x, r: x + size, t: y, b: y + size, sz: size };
-    
-            safe = isSafe( rect );
+    const borderWidth = Math.max(5, Math.floor(size / 25));
+    div.style.setProperty(
+      "border",
+      `${borderWidth}px solid ${randomFromArray(COLOURS.slice(2))}`
+    );
 
-            if (!safe) {
-                if ( tryLimit % 10 === 0 ) {
-                    size = nextSmallerFromArray( SIZES, size );
-                }
-            }
+    extents.push(rect);
 
-            tryLimit --;
-            if ( tryLimit === 0 ) {
-                console.log(`out of luck!: ${JSON.stringify(rect)} for ${num}`);
-                safe = true;
-            }
-        } while ( !safe )
+    return div;
+  }
 
-        console.log(`${num}: ${JSON.stringify(rect)}`);
+  mainEl.innerHTML = "";
 
-        const div = document.createElement('div');
-        div.textContent = num;
+  for (let num = START_NUM; num <= END_NUM; num++) {
+    mainEl.appendChild(getNumElem(num));
+  }
 
-        const bd = ""
-
-        div.style.setProperty('left', `${x}px`);
-        div.style.setProperty('top', `${y}px`);
-        div.style.setProperty('height', `${size}px`);
-        div.style.setProperty('width', `${size}px`);
-        div.style.setProperty('font-size', `${size/20.0}rem`);
-        div.style.setProperty('color', `${col}`);
-
-        const borderWidth = Math.max( 5, Math.floor(size/35) )
-
-        div.style.setProperty('border', `${borderWidth}px solid indigo`);
-
-        extents.push(rect);
-
-        return div;
-    }
-
-    mainEl.innerHTML = "";
-
-    for (let num = START_NUM; num <=END_NUM ; num++) {
-        mainEl.appendChild(getNumElem(num));
-    }
+  removeEventListener("resize", resizeListener);
+  addEventListener("resize", resizeListener);
 }
+
+const resizeListener = (function makeResizeListener() {
+  const resizeDelay = 500;
+  let timeout = false;
+
+  return function resizeListener() {
+    clearTimeout(timeout);
+    timeout = setTimeout(init, resizeDelay);
+  };
+})();
 
 // ----------------------------------------------------------------------------
 
 init();
-
-
