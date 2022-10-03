@@ -1,0 +1,43 @@
+:root {
+    --bd: black;
+    --bd-num: rgb(193, 57, 8);
+    --bg: rgb(222, 238, 243);
+    --fg: black;
+}
+
+body {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+    background-color: var(--bg);
+    color: var(--fg);
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+}
+
+#main {
+    position: relative;
+    flex-grow: 1;
+    border: 2px solid var(--bd);
+}
+
+div {
+    border: 0.5rem solid var(--bd-num);
+    position: absolute;
+    display: grid;
+    place-content: center;
+}
+
+.dummy {
+    color: crimson;
+}
+
+h1 {
+    margin-bottom: 0.5rem;
+    text-decoration: underline;
+}
+
+h3 {
+    margin-bottom: 0.2rem;
+}

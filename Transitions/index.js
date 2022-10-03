@@ -39,12 +39,16 @@ function randomChar() {
   );
 }
 
+// ----------------------------------------------------------------------------
+
 class Element {
   constructor(id, el) {
     this.id = id;
     this.el = el;
   }
 }
+
+// ----------------------------------------------------------------------------
 
 class Matrix {
   static UPDATE_FREQ = 1;
