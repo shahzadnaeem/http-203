@@ -1,4 +1,5 @@
 const mainEl = document.querySelector("#main");
+const toEl = document.querySelector("#to");
 
 const START_NUM = 1;
 const END_NUM = 20;
@@ -10,6 +11,11 @@ function init() {
 
   const maxX = mainEl.clientWidth;
   const maxY = mainEl.clientHeight;
+
+  let CALC_END_NUM = Math.floor( maxX * maxY / ( 200 * 200 ) );
+  CALC_END_NUM -= CALC_END_NUM % 5;
+
+  console.log(`CALC_END_NUM = ${CALC_END_NUM}`);
 
   const SIZES = [75, 105, 145, 190, 225];
 
@@ -24,6 +30,7 @@ function init() {
   ];
 
   const extents = [];
+  let overlaps = 0;
 
   function randomFromArray(array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -76,6 +83,7 @@ function init() {
       tryLimit--;
       if (tryLimit === 0) {
         console.log(`out of luck!: ${JSON.stringify(rect)} for ${num}`);
+        overlaps ++;
         safe = true;
       }
     } while (!safe);
@@ -106,9 +114,17 @@ function init() {
 
   mainEl.innerHTML = "";
 
-  for (let num = START_NUM; num <= END_NUM; num++) {
+  for (let num = START_NUM; num <= CALC_END_NUM; num++) {
     mainEl.appendChild(getNumElem(num));
   }
+
+  if ( overlaps ) {
+    overlaps = `(${overlaps} overlaps!)`;
+  } else {
+    overlaps = "";
+  }
+
+  toEl.textContent = `${START_NUM} to ${CALC_END_NUM} ${overlaps}`;
 
   removeEventListener("resize", resizeListener);
   addEventListener("resize", resizeListener);
