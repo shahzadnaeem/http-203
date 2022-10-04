@@ -69,6 +69,11 @@ function initDisplay() {
   let CALC_END_NUM = Math.floor((maxX * maxY) / (200 * 200));
   CALC_END_NUM -= CALC_END_NUM % 5;
 
+  if (CALC_END_NUM === 0) {
+    console.log(`CALC_END_NUM was 0!`);
+    CALC_END_NUM = 20;
+  }
+
   if ( CALC_END_NUM > 100 ) {
     CALC_END_NUM = 100;
   }
@@ -225,6 +230,15 @@ function initDisplay() {
       `${borderWidth}px solid ${randomFromArray(COLOURS.slice(2))}`
     );
     div.style.setProperty("border-radius", "25%");
+
+    div.addEventListener('click', (ev) => {
+      div.classList.add("wobble");
+
+      setTimeout(() => {
+        div.classList.remove("wobble");
+        div.classList.add("fade");
+      }, 500);
+    });
 
     extents.push(rect);
 

@@ -40,6 +40,50 @@ body {
     position: absolute;
     display: grid;
     place-content: center;
+    cursor: pointer;
+}
+
+.fade {
+    transition: opacity 0.5s linear;
+    opacity: 33%;
+}
+
+.wobble {
+    animation: animate-wobble 0.5s linear;
+}
+
+@keyframes animate-wobble {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(20deg);
+    }
+
+    35% {
+        transform: rotate(-20deg);
+    }
+
+    55% {
+        transform: rotate(15deg);
+    }
+
+    70% {
+        transform: rotate(-10deg);
+    }
+
+    80% {
+        transform: rotate(5deg);
+    }
+
+    90% {
+        transform: rotate(-2deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 .dummy {
