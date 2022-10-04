@@ -3,6 +3,7 @@
     --bd-num: rgb(193, 57, 8);
     --bg: rgb(206, 220, 224);
     --fg: black;
+    --fg-sep: darkgray;
 }
 
 body {
@@ -18,11 +19,23 @@ body {
 
 #main {
     position: relative;
+    margin-top: 0.5rem;
     flex-grow: 1;
     border: 2px solid var(--bd);
 }
 
-div {
+#controls {
+    display: grid;
+    grid-auto-flow: column;
+    place-content: center;
+    gap: 0.25rem;
+}
+
+.control-sep {
+    border-right: 1px solid var(--fg-sep);
+}
+
+.number {
     border: 0.5rem solid var(--bd-num);
     position: absolute;
     display: grid;
