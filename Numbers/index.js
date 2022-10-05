@@ -62,14 +62,17 @@ function initControls() {
 
 function initDisplay() {
 
-  const rects = mainEl.getClientRects();
+  const clientRects = mainEl.getClientRects();
+  const boundingRect = mainEl.getBoundingClientRect();
 
-  console.log(`mainEl.rects = ${JSON.stringify(rects)}`);
+  console.log(`mainEl.clientRects = ${JSON.stringify(clientRects)}`);
+  console.log(`mainEl.boundingRects = ${JSON.stringify(boundingRect)}`)
 
   const maxX = mainEl.clientWidth;
   const maxY = mainEl.clientHeight;
 
   console.log(`mainEl = ${maxX} x ${maxY}`);
+  console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
 
   let CALC_END_NUM = Math.floor((maxX * maxY) / (200 * 200));
   CALC_END_NUM -= CALC_END_NUM % 5;
