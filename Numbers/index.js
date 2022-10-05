@@ -68,8 +68,8 @@ function initDisplay() {
   console.log(`mainEl.clientRects = ${JSON.stringify(clientRects)}`);
   console.log(`mainEl.boundingRects = ${JSON.stringify(boundingRect)}`)
 
-  const maxX = mainEl.clientWidth;
-  const maxY = mainEl.clientHeight;
+  let maxX = mainEl.clientWidth;
+  let maxY = mainEl.clientHeight;
 
   console.log(`mainEl = ${maxX} x ${maxY}`);
   console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
