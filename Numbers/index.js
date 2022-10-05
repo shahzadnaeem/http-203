@@ -79,6 +79,8 @@ function initDisplay() {
     maxY = document.documentElement.clientHeight - 106;  // SAD FACE
   }
 
+  console.log(`mainEl = ${maxX} x ${maxY}`);
+
   let CALC_END_NUM = Math.floor((maxX * maxY) / (200 * 200));
   CALC_END_NUM -= CALC_END_NUM % 5;
 
