@@ -77,7 +77,7 @@ function initDisplay() {
   if ( maxY === 0 ) {
     // This is wrong :(
     maxY = document.documentElement.clientHeight - 106;  // SAD FACE
-    console.log(`!! mainEl = ${maxX} x ${maxY}`);
+    console.log(`😠 mainEl = ${maxX} x ${maxY}`);
   }
 
   let CALC_END_NUM = Math.floor((maxX * maxY) / (200 * 200));
