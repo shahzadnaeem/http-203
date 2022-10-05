@@ -1,6 +1,6 @@
 :root {
     --bg: rgb(243, 224, 141);
-    --bg-box: darkgreen;
+    --bg-box: cyan;
     --bg-footer: rgb(233, 206, 87);
     --fg: black;
     --fg-sep: darkgray;
@@ -60,6 +60,44 @@ h2, h3 {
     white-space: pre-wrap;
 }
 
-.red {
-    background-color: crimson;
+.invert-filter {
+    filter: invert();
+}
+
+.wobble {
+    animation: animate-wobble 0.5s linear;
+}
+
+@keyframes animate-wobble {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(20deg);
+    }
+
+    35% {
+        transform: rotate(-20deg);
+    }
+
+    55% {
+        transform: rotate(15deg);
+    }
+
+    70% {
+        transform: rotate(-10deg);
+    }
+
+    80% {
+        transform: rotate(5deg);
+    }
+
+    90% {
+        transform: rotate(-2deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }

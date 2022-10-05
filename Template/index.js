@@ -35,8 +35,16 @@ function initDisplay() {
   div.className = "box";
   div.textContent = `#${count}\n${JSON.stringify(getViewportInfo(), 0, 2)}`;
 
+  div.addEventListener("click", (ev) => {
+    div.classList.add("wobble");
+
+    setTimeout(() => {
+      div.classList.remove("wobble");
+    }, 500);
+  });
+
   if (check1) {
-    div.classList.add("red");
+    div.classList.add("invert-filter");
   }
   mainEl.appendChild(div);
 
