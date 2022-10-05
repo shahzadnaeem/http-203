@@ -72,11 +72,12 @@ function initDisplay() {
   let maxY = mainEl.clientHeight;
 
   console.log(`mainEl = ${maxX} x ${maxY}`);
-  console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
 
   if ( maxY === 0 ) {
     // This is wrong :(
     maxY = document.documentElement.clientHeight - 106;  // SAD FACE
+
+    console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
     console.log(`😠 mainEl = ${maxX} x ${maxY}`);
   }
 
