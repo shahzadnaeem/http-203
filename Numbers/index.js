@@ -61,10 +61,10 @@ function initControls() {
 }
 
 function initDisplay() {
-  console.log(`mainEl = ${mainEl.clientWidth} x ${mainEl.clientHeight}`);
-
   const maxX = mainEl.clientWidth;
   const maxY = mainEl.clientHeight;
+
+  console.log(`mainEl = ${maxX} x ${maxY}`);
 
   let CALC_END_NUM = Math.floor((maxX * maxY) / (200 * 200));
   CALC_END_NUM -= CALC_END_NUM % 5;
