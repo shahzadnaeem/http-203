@@ -61,6 +61,11 @@ function initControls() {
 }
 
 function initDisplay() {
+
+  const rects = mainEl.getClientRects();
+
+  console.log(`mainEl.rects = ${JSON.stringify(rects)}`);
+
   const maxX = mainEl.clientWidth;
   const maxY = mainEl.clientHeight;
 
