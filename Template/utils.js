@@ -21,8 +21,20 @@ export function getViewportInfo() {
   };
 }
 
-export function trackCheckbox( el, initVal, listener ) {
-    el.checked = initVal;
-    el.removeEventListener('change', listener );
-    el.addEventListener( 'change', listener );
+export function trackCheckbox(el, initVal, listener) {
+  el.checked = initVal;
+  el.removeEventListener("change", listener);
+  el.addEventListener("change", listener);
+}
+
+export async function waitMs(ms = 1000, el, workingClass='app-status__working') {
+
+  el && el.classList.add(workingClass);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      el && el.classList.remove(workingClass);
+      resolve("done");
+    }, ms);
+  });
 }

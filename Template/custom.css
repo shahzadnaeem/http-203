@@ -1,9 +1,14 @@
 :root {
     --bg: rgb(243, 224, 141);
+    --bg-header: rgb(235, 211, 105);
+    --bg-footer: rgb(235, 211, 105);
     --bg-box: cyan;
-    --bg-footer: rgb(233, 206, 87);
+
     --fg: black;
     --fg-sep: darkgray;
+    --fg-app-status: green;
+    --fg-app-status-working: crimson;
+
     --bd: black;
 }
 
@@ -16,6 +21,11 @@ body {
     height: 100vh;
     display: flex;
     flex-flow: column;
+}
+
+header {
+    padding-bottom: 0.5rem;
+    background-color: var(--bg-header);
 }
 
 footer {
@@ -32,7 +42,6 @@ h2, h3 {
 }
 
 #main {
-    margin-top: 0.5rem;
     flex-grow: 1;
     border: 2px solid var(--bd);
     gap: 1rem;
@@ -47,6 +56,14 @@ h2, h3 {
 
 .control-sep {
     border-right: 1px solid var(--fg-sep);
+}
+
+.app-status {
+    color: var(--fg-app-status);
+}
+
+.app-status__working {
+    color: var(--fg-app-status-working);
 }
 
 .box {

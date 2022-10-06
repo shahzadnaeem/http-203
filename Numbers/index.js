@@ -1,3 +1,4 @@
+const headerEl = document.querySelector("#header");
 const mainEl = document.querySelector("#main");
 const toEl = document.querySelector("#to");
 const resetEl = document.querySelector("#reset");
@@ -74,10 +75,11 @@ function initDisplay() {
   console.log(`mainEl = ${maxX} x ${maxY}`);
 
   if ( maxY === 0 ) {
-    // This is wrong :(
-    maxY = document.documentElement.clientHeight - 106;  // SAD FACE
+    // Make an adjustment - 4 is the mainEl top + bottom border width
+    maxY = document.documentElement.clientHeight - headerEl.clientHeight - 4;
 
     console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
+    console.log(`headerEl = ${headerEl.clientWidth} x ${headerEl.clientHeight}`);
     console.log(`😠 mainEl = ${maxX} x ${maxY}`);
   }
 

@@ -1,9 +1,10 @@
-import { clock, getViewportInfo, trackCheckbox } from "./utils.js";
+import { clock, getViewportInfo, trackCheckbox, waitMs } from "./utils.js";
 
 const mainEl = document.querySelector("#main");
 const subHeadingEl = document.querySelector("#subheading");
 const resetEl = document.querySelector("#reset");
 const check1El = document.querySelector("#check1");
+const appStatusEl = document.querySelector("#app-status");
 const clockEl = document.querySelector("#clock");
 
 let count = 0;
@@ -51,8 +52,10 @@ function initDisplay() {
   clock(clockEl);
 }
 
-function init() {
+async function init() {
   check1 = true;
+
+  await waitMs(1000, appStatusEl, 'app-status__working');
 
   initControls();
   initDisplay();
