@@ -114,17 +114,16 @@ class App {
       let tries = 0;
       do {
         tries++;
+        if (tries > 5) {
+          return;
+        }
+
         shape = this.randomShape();
         const width = shape.grid[0].length;
         const height = shape.grid.length;
         x = this.randomInt(0, this.width - width);
         y = this.randomInt(0, this.height - height);
-      } while (!this.canPlaceShape(shape, x, y) || tries > 20);
-
-      if (tries > 20) {
-        // No luck!
-        return;
-      }
+      } while (!this.canPlaceShape(shape, x, y));
 
       this.placeShape(shape, x, y);
     }
@@ -149,9 +148,10 @@ class App {
     return div;
   }
 
-  shiftBoardDown() {
-    this.board.copyWithin(this.width, 0, this.numEntries - this.width);
-    for (let i = 0; i < this.width; i++) {
+  shiftBoardDown(rows = 1) {
+    const amount = rows * this.width;
+    this.board.copyWithin(amount, 0, this.numEntries - amount);
+    for (let i = 0; i < amount; i++) {
       this.board[i] = CELLS.EMPTY;
     }
   }
@@ -177,6 +177,8 @@ const app = new App(BOARD_WIDTH, BOARD_HEIGHT);
 function resetListener() {
   paused = true;
   togglePaused();
+
+  ticks = 0;
 
   init();
 }
