@@ -3,6 +3,7 @@ import { clock } from "./utils.js";
 const mainEl = document.querySelector("#main");
 const subHeadingEl = document.querySelector("#subheading");
 const resetEl = document.querySelector("#reset");
+const pauseEl = document.querySelector("#pause");
 const clockEl = document.querySelector("#clock");
 const boardEl = document.querySelector("#board");
 
@@ -73,16 +74,24 @@ class App {
   }
 
   canPlaceShape(shape, x, y) {
-    let canPlace = true;
     if (!this.fitsOnBoard(shape, x, y)) {
-      canPlace = false;
+      return false;
     }
 
-    // TODO: Worry about overlaps here!
     const width = shape.grid[0].length;
     const height = shape.grid.length;
 
-    return canPlace;
+    for (let sx = 0; sx < width; sx++) {
+      for (let sy = 0; sy < height; sy++) {
+        if (shape.grid[sy].charAt(sx) === "x") {
+          if (!this.isEmpty(x + sx, y + sy)) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   placeShape(shape, x, y) {
@@ -102,13 +111,20 @@ class App {
     for (let i = 0; i < num; i++) {
       let shape, x, y;
 
+      let tries = 0;
       do {
+        tries++;
         shape = this.randomShape();
         const width = shape.grid[0].length;
         const height = shape.grid.length;
         x = this.randomInt(0, this.width - width);
         y = this.randomInt(0, this.height - height);
-      } while (!this.canPlaceShape(shape, x, y));
+      } while (!this.canPlaceShape(shape, x, y) || tries > 20);
+
+      if (tries > 20) {
+        // No luck!
+        return;
+      }
 
       this.placeShape(shape, x, y);
     }
@@ -129,12 +145,9 @@ class App {
   newCellEl(cell) {
     const div = document.createElement("div");
     div.classList.add("cell", CELL_CLASSES[cell]);
-    div.textContent = "▢";
 
     return div;
   }
-
-  shapeFits(shapeName, x, y) {}
 
   shiftBoardDown() {
     this.board.copyWithin(this.width, 0, this.numEntries - this.width);
@@ -156,9 +169,15 @@ class App {
 
 // ----------------------------------------------------------------------------
 
-const app = new App(10, 20);
+const BOARD_WIDTH = 10;
+const BOARD_HEIGHT = 25;
+
+const app = new App(BOARD_WIDTH, BOARD_HEIGHT);
 
 function resetListener() {
+  paused = true;
+  togglePaused();
+
   init();
 }
 
@@ -166,7 +185,13 @@ let ticks = 0;
 let tickSpeed = 1000;
 let tickInterval = false;
 
+let paused = false;
+
 function tick() {
+  if (paused) {
+    return;
+  }
+
   ticks++;
 
   app.randomShapes(1);
@@ -178,9 +203,22 @@ function tick() {
 
 // ----------------------------------------------------------------------------
 
+function togglePaused() {
+  paused = !paused;
+
+  if (paused) {
+    pauseEl.textContent = "Resume";
+  } else {
+    pauseEl.textContent = "Pause";
+  }
+}
+
 function initControls() {
   resetEl.removeEventListener("click", resetListener);
   resetEl.addEventListener("click", resetListener);
+
+  pauseEl.removeEventListener("click", togglePaused);
+  pauseEl.addEventListener("click", togglePaused);
 
   if (tickInterval) {
     clearInterval(tickInterval);
@@ -191,8 +229,7 @@ function initDisplay() {
   subHeadingEl.textContent = `Tetris`;
 
   app.clearBoard();
-  // app.randomBoard();
-  app.randomShapes(1);
+  app.randomShapes(10);
   app.drawBoard(boardEl);
 
   clock(clockEl);

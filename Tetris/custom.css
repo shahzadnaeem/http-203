@@ -3,6 +3,7 @@
     --bg-header: rgb(207, 207, 207);
     --bg-footer: rgb(207, 207, 207);
     --bg-board: rgb(209, 245, 245);
+    --bg-cell: rgb(239, 255, 255);
 
     --fg: black;
     --fg-sep: darkgray;
@@ -69,16 +70,20 @@ h2, h3 {
 }
 
 #board {
+    margin: 0 auto;
+    margin-top: 2.0rem;
+    background-color: var(--bg-board);
     max-width: fit-content;
     border: 1px solid var(--bd-board);
-    margin: 0 auto;
-    background-color: var(--bg-board);
     display: grid;
-    grid-template-columns: repeat(10, 60px);
+    grid-template-columns: repeat(10, auto);
     gap: 2px;
 }
 
 .cell {
+    background-color: var(--bg-cell);
+    width: 40px;
+    height: 40px;
     display: grid;
     place-content: center;
     border: 2px solid var(--bd-cell);
