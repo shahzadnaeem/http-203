@@ -55,7 +55,7 @@ function initDisplay() {
 async function init() {
   check1 = true;
 
-  await waitMs(1000, appStatusEl, 'app-status__working');
+  await waitMs(1000, appStatusEl, "app-status__working");
 
   initControls();
   initDisplay();
