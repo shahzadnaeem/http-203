@@ -21,6 +21,7 @@ const CELL_COLOURS = {
 
 const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());
 
+const FIRST_CELL_CHAR = "X";
 const CELL_CHAR = "x";
 const EMPTY_CELL_CHAR = ".";
 
@@ -33,6 +34,8 @@ const SHAPES = {
   TEE: { grid: [".x.", "xxx"], colour: CELL_COLOURS.PURPLE },
   STEP2: { grid: ["xx.", ".xx"], colour: CELL_COLOURS.RED },
 };
+
+const SHAPE_NAMES = Object.keys(SHAPES);
 
 class Shape {
   constructor(rawShape) {
@@ -86,10 +89,19 @@ class Shape {
       row.split("").map((ch) => (ch === CELL_CHAR ? 1 : 0))
     );
 
+    let first = true;
     let y = 0;
     rows.forEach((row) => {
       let x = 0;
-      row.forEach((v) => (this.gridMatrix[x++][y] = v));
+      row.forEach((v) => {
+        if (v && first) {
+          this.firstX = x;
+          this.firstY = y;
+          first = false;
+        }
+
+        this.gridMatrix[x++][y] = v;
+      });
       y++;
     });
   }
@@ -98,22 +110,30 @@ class Shape {
     return this.gridMatrix[x][y] !== 0;
   }
 
-  clonedGridMatrix() {
+  isFirst(x, y) {
+    return x === this.firstX && y === this.firstY;
+  }
+
+  cloneGridMatrix() {
     return this.gridMatrix.map((col) => [...col]);
   }
 
   rotateCCW() {
-    const origGridMatrix = this.clonedGridMatrix();
+    const origGridMatrix = this.cloneGridMatrix();
+
+    [this.firstX, this.firstY] = [this.firstY, this.height - 1 - this.firstX];
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        this.gridMatrix[x][y] = origGridMatrix[this.height - 1 - y][x];
+        this.gridMatrix[x][y] = origGridMatrix[this.width - 1 - y][x];
       }
     }
   }
 
   rotateCW() {
-    const origGridMatrix = this.clonedGridMatrix();
+    const origGridMatrix = this.cloneGridMatrix();
+
+    [this.firstX, this.firstY] = [this.firstY, this.width - 1 - this.firstX];
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -126,7 +146,11 @@ class Shape {
     let s = `${this.colour}\n`;
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        s += this.gridMatrix[x][y] ? CELL_CHAR : EMPTY_CELL_CHAR;
+        if (this.isFirst(x, y)) {
+          s += FIRST_CELL_CHAR;
+        } else {
+          s += this.gridMatrix[x][y] ? CELL_CHAR : EMPTY_CELL_CHAR;
+        }
       }
       s += "\n";
     }
@@ -134,8 +158,6 @@ class Shape {
     return s;
   }
 }
-
-const SHAPE_NAMES = Object.keys(SHAPES);
 
 class App {
   constructor(width, height) {
@@ -202,23 +224,36 @@ class App {
   }
 
   placeShape(shape, x, y) {
-    console.log(`placeShape()`);
-    const width = shape.grid[0].length;
-    const height = shape.grid.length;
-
-    let first = true;
+    const width = shape.width;
+    const height = shape.height;
 
     for (let sy = 0; sy < height; sy++) {
       for (let sx = 0; sx < width; sx++) {
         if (shape.hasCellAt(sx, sy)) {
-          this.setBoard(first ? -shape.colour : shape.colour, x + sx, y + sy);
-          if (first) first = false;
+          this.setBoard(
+            shape.isFirst(sx, sy) ? -shape.colour : shape.colour,
+            x + sx,
+            y + sy
+          );
         }
       }
     }
   }
 
-  randomShapes(num = 20) {
+  removeShape(shape, x, y) {
+    const width = shape.width;
+    const height = shape.height;
+
+    for (let sy = 0; sy < height; sy++) {
+      for (let sx = 0; sx < width; sx++) {
+        if (shape.hasCellAt(sx, sy)) {
+          this.setBoard(CELL_COLOURS.EMPTY, x + sx, y + sy);
+        }
+      }
+    }
+  }
+
+  randomShapes(num = 20, below = 0) {
     for (let i = 0; i < num; i++) {
       let shape, x, y;
 
@@ -242,7 +277,7 @@ class App {
         const width = shape.width;
         const height = shape.height;
         x = this.randomInt(0, this.width - width);
-        y = this.randomInt(0, this.height - height);
+        y = this.randomInt(0, this.height - height - below) + below;
       } while (!this.canPlaceShape(shape, x, y));
 
       this.placeShape(shape, x, y);
@@ -305,12 +340,16 @@ function resetListener() {
 
   ticks = 0;
 
+  allShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
+
   init();
 }
 
 let ticks = 0;
 let tickSpeed = 1000;
 let tickInterval = false;
+
+let allShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
 
 let paused = false;
 
@@ -321,8 +360,18 @@ function tick() {
 
   ticks++;
 
-  app.randomShapes(1);
-  app.shiftBoardDown();
+  allShapes.forEach((shape, i) => {
+    const shapeX = (i % 2) * 5 + 1;
+    const shapeY = Math.floor(i / 2) * 6 + 1;
+
+    if (ticks > 1) {
+      app.removeShape(shape, shapeX, shapeY);
+      shape.rotateCCW();
+    }
+
+    app.placeShape(shape, shapeX, shapeY);
+  });
+
   app.drawBoard(boardEl);
 
   subHeadingEl.textContent = `Tetris #${ticks}`;
@@ -356,7 +405,6 @@ function initDisplay() {
   subHeadingEl.textContent = `Tetris`;
 
   app.clearBoard();
-  app.randomShapes(10);
   app.drawBoard(boardEl);
 
   clock(clockEl);
@@ -373,11 +421,11 @@ async function init() {
 
 init();
 
-for (let key in SHAPES) {
-  const sh = SHAPES[key];
-  const shape = new Shape(sh);
-  console.log(`${key}\n${shape.toString()}`);
+// for (let key in SHAPES) {
+//   const sh = SHAPES[key];
+//   const shape = new Shape(sh);
+//   console.log(`${key}\n${shape.toString()}`);
 
-  shape.rotateCCW();
-  console.log(`${key}:CCW\n${shape.toString()}`);
-}
+//   shape.rotateCCW();
+//   console.log(`${key}:CCW\n${shape.toString()}`);
+// }
