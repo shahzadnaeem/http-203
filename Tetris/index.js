@@ -7,7 +7,7 @@ const pauseEl = document.querySelector("#pause");
 const clockEl = document.querySelector("#clock");
 const boardEl = document.querySelector("#board");
 
-const CELLS = {
+const CELL_COLOURS = {
   EMPTY: 0,
   RED: 1,
   PURPLE: 2,
@@ -16,19 +16,124 @@ const CELLS = {
   ORANGE: 5,
   BLUE: 6,
   CYAN: 7,
+  FIRST: 8,
 };
 
-const CELL_CLASSES = Object.keys(CELLS).map((k) => k.toLowerCase());
+const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());
+
+const CELL_CHAR = "x";
+const EMPTY_CELL_CHAR = ".";
 
 const SHAPES = {
-  LINE4: { grid: ["....", "xxxx", "....", "...."], col: CELLS.CYAN },
-  ELL1: { grid: ["x..", "xxx"], col: CELLS.BLUE },
-  ELL2: { grid: ["..x", "xxx"], col: CELLS.ORANGE },
-  SQUARE: { grid: ["xx", "xx"], col: CELLS.YELLOW },
-  STEP: { grid: [".xx", "xx."], col: CELLS.GREEN },
-  TEE: { grid: [".x.", "xxx"], col: CELLS.PURPLE },
-  STEP2: { grid: ["xx.", ".xx"], col: CELLS.RED },
+  LINE4: { grid: ["....", "xxxx"], colour: CELL_COLOURS.CYAN },
+  ELL1: { grid: ["x..", "xxx"], colour: CELL_COLOURS.BLUE },
+  ELL2: { grid: ["..x", "xxx"], colour: CELL_COLOURS.ORANGE },
+  SQUARE: { grid: ["xx", "xx"], colour: CELL_COLOURS.YELLOW },
+  STEP: { grid: [".xx", "xx."], colour: CELL_COLOURS.GREEN },
+  TEE: { grid: [".x.", "xxx"], colour: CELL_COLOURS.PURPLE },
+  STEP2: { grid: ["xx.", ".xx"], colour: CELL_COLOURS.RED },
 };
+
+class Shape {
+  constructor(rawShape) {
+    this.initShape(rawShape);
+  }
+
+  initShape(rawShape) {
+    this.grid = [...rawShape.grid];
+    this.colour = rawShape.colour;
+    this.valid = false;
+
+    const maxWidth = this.grid.reduce(
+      (width, row) => (row.length > width ? row.length : width),
+      0
+    );
+
+    if (maxWidth === 0) {
+      throw new Error(`Invalid grid: Empty!`);
+    }
+
+    if (!this.grid.every((row) => row.length === maxWidth)) {
+      throw new Error(`Invalid grid: not all rows same width`);
+    }
+
+    if (!this.grid.some((row) => row.includes(CELL_CHAR))) {
+      throw new Error(`Invalid grid: No active present!`);
+    }
+
+    this.width = maxWidth;
+    this.height = this.grid.length;
+
+    while (this.height !== this.width) {
+      this.grid.push(EMPTY_CELL_CHAR.repeat(this.width));
+      this.height++;
+    }
+
+    // Now create internal representation
+    this.initGridMatrix();
+
+    this.valid = true;
+  }
+
+  initGridMatrix() {
+    this.gridMatrix = [];
+
+    for (let x = 0; x < this.width; x++) {
+      this.gridMatrix.push(Array(this.height).fill(0));
+    }
+
+    const rows = this.grid.map((row) =>
+      row.split("").map((ch) => (ch === CELL_CHAR ? 1 : 0))
+    );
+
+    let y = 0;
+    rows.forEach((row) => {
+      let x = 0;
+      row.forEach((v) => (this.gridMatrix[x++][y] = v));
+      y++;
+    });
+  }
+
+  hasCellAt(x, y) {
+    return this.gridMatrix[x][y] !== 0;
+  }
+
+  clonedGridMatrix() {
+    return this.gridMatrix.map((col) => [...col]);
+  }
+
+  rotateCCW() {
+    const origGridMatrix = this.clonedGridMatrix();
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        this.gridMatrix[x][y] = origGridMatrix[this.height - 1 - y][x];
+      }
+    }
+  }
+
+  rotateCW() {
+    const origGridMatrix = this.clonedGridMatrix();
+
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        this.gridMatrix[x][y] = origGridMatrix[y][this.width - 1 - x];
+      }
+    }
+  }
+
+  toString() {
+    let s = `${this.colour}\n`;
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        s += this.gridMatrix[x][y] ? CELL_CHAR : EMPTY_CELL_CHAR;
+      }
+      s += "\n";
+    }
+
+    return s;
+  }
+}
 
 const SHAPE_NAMES = Object.keys(SHAPES);
 
@@ -51,12 +156,14 @@ class App {
   }
 
   randomShape() {
-    return SHAPES[this.randomFromArray(SHAPE_NAMES)];
+    const rawShape = SHAPES[this.randomFromArray(SHAPE_NAMES)];
+
+    return new Shape(rawShape);
   }
 
   fitsOnBoard(shape, x, y) {
-    const width = shape.grid[0].length;
-    const height = shape.grid.length;
+    const width = shape.width;
+    const height = shape.height;
 
     return x + width <= this.width && y + height <= this.height;
   }
@@ -70,7 +177,7 @@ class App {
   }
 
   isEmpty(x, y) {
-    return this.board[y * this.width + x] === CELLS.EMPTY;
+    return this.board[y * this.width + x] === CELL_COLOURS.EMPTY;
   }
 
   canPlaceShape(shape, x, y) {
@@ -78,12 +185,12 @@ class App {
       return false;
     }
 
-    const width = shape.grid[0].length;
-    const height = shape.grid.length;
+    const width = shape.width;
+    const height = shape.height;
 
-    for (let sx = 0; sx < width; sx++) {
-      for (let sy = 0; sy < height; sy++) {
-        if (shape.grid[sy].charAt(sx) === "x") {
+    for (let sy = 0; sy < height; sy++) {
+      for (let sx = 0; sx < width; sx++) {
+        if (shape.hasCellAt(sx, sy)) {
           if (!this.isEmpty(x + sx, y + sy)) {
             return false;
           }
@@ -95,13 +202,17 @@ class App {
   }
 
   placeShape(shape, x, y) {
+    console.log(`placeShape()`);
     const width = shape.grid[0].length;
     const height = shape.grid.length;
 
-    for (let sx = 0; sx < width; sx++) {
-      for (let sy = 0; sy < height; sy++) {
-        if (shape.grid[sy].charAt(sx) === "x") {
-          this.setBoard(shape.col, x + sx, y + sy);
+    let first = true;
+
+    for (let sy = 0; sy < height; sy++) {
+      for (let sx = 0; sx < width; sx++) {
+        if (shape.hasCellAt(sx, sy)) {
+          this.setBoard(first ? -shape.colour : shape.colour, x + sx, y + sy);
+          if (first) first = false;
         }
       }
     }
@@ -119,8 +230,17 @@ class App {
         }
 
         shape = this.randomShape();
-        const width = shape.grid[0].length;
-        const height = shape.grid.length;
+
+        const rand = Math.floor(Math.random() * 3);
+
+        if (rand % 3 === 1) {
+          shape.rotateCCW();
+        } else if (rand % 3 === 2) {
+          shape.rotateCW();
+        }
+
+        const width = shape.width;
+        const height = shape.height;
         x = this.randomInt(0, this.width - width);
         y = this.randomInt(0, this.height - height);
       } while (!this.canPlaceShape(shape, x, y));
@@ -131,7 +251,7 @@ class App {
 
   clearBoard() {
     for (let i = 0; i < this.numEntries; i++) {
-      this.board[i] = CELLS.EMPTY;
+      this.board[i] = CELL_COLOURS.EMPTY;
     }
   }
 
@@ -143,7 +263,12 @@ class App {
 
   newCellEl(cell) {
     const div = document.createElement("div");
-    div.classList.add("cell", CELL_CLASSES[cell]);
+    if (cell < 0) {
+      div.classList.add("cell", CELL_CLASSES[-cell]);
+      div.classList.add("cell", CELL_CLASSES[CELL_COLOURS.FIRST]);
+    } else {
+      div.classList.add("cell", CELL_CLASSES[cell]);
+    }
 
     return div;
   }
@@ -152,7 +277,7 @@ class App {
     const amount = rows * this.width;
     this.board.copyWithin(amount, 0, this.numEntries - amount);
     for (let i = 0; i < amount; i++) {
-      this.board[i] = CELLS.EMPTY;
+      this.board[i] = CELL_COLOURS.EMPTY;
     }
   }
 
@@ -247,3 +372,12 @@ async function init() {
 // ----------------------------------------------------------------------------
 
 init();
+
+for (let key in SHAPES) {
+  const sh = SHAPES[key];
+  const shape = new Shape(sh);
+  console.log(`${key}\n${shape.toString()}`);
+
+  shape.rotateCCW();
+  console.log(`${key}:CCW\n${shape.toString()}`);
+}

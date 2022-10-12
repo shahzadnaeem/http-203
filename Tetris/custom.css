@@ -116,3 +116,7 @@ h2, h3 {
 .cyan {
     background-color: aqua;
 }
+
+.first::before {
+    content: "●";
+}

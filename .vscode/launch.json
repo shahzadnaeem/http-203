@@ -10,6 +10,13 @@
             "name": "Numbers",
             "url": "http://localhost:5500/Numbers/index.html",
             "webRoot": "${workspaceFolder}",
-        }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Tetris",
+            "url": "http://localhost:5500/Tetris/index.html",
+            "webRoot": "${workspaceFolder}",
+        },
     ]
 }
