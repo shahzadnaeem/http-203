@@ -17,6 +17,9 @@ const CELL_COLOURS = {
   BLUE: 6,
   CYAN: 7,
   FIRST: 8,
+  PINK: 9,
+  LIME: 10,
+  NIGHT: 11,
 };
 
 const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());
@@ -33,6 +36,9 @@ const SHAPES = {
   STEP: { grid: [".xx", "xx."], colour: CELL_COLOURS.GREEN },
   TEE: { grid: [".x.", "xxx"], colour: CELL_COLOURS.PURPLE },
   STEP2: { grid: ["xx.", ".xx"], colour: CELL_COLOURS.RED },
+  ZIG: { grid: ["x.x", "xxx"], colour: CELL_COLOURS.PINK },
+  FISH: { grid: ["xx ", "xx ", "  x"], colour: CELL_COLOURS.LIME },
+  FANG: { grid: ["x x", " x ", " x "], colour: CELL_COLOURS.NIGHT },
 };
 
 const SHAPE_NAMES = Object.keys(SHAPES);
@@ -362,7 +368,7 @@ function tick() {
 
   allShapes.forEach((shape, i) => {
     const shapeX = (i % 2) * 5 + 1;
-    const shapeY = Math.floor(i / 2) * 6 + 1;
+    const shapeY = Math.floor(i / 2) * 5 + 1;
 
     if (ticks > 1) {
       app.removeShape(shape, shapeX, shapeY);
@@ -421,11 +427,11 @@ async function init() {
 
 init();
 
-// for (let key in SHAPES) {
-//   const sh = SHAPES[key];
-//   const shape = new Shape(sh);
-//   console.log(`${key}\n${shape.toString()}`);
+for (let key in SHAPES) {
+  const sh = SHAPES[key];
+  const shape = new Shape(sh);
+  console.log(`${key}\n${shape.toString()}`);
 
-//   shape.rotateCCW();
-//   console.log(`${key}:CCW\n${shape.toString()}`);
-// }
+  shape.rotateCCW();
+  console.log(`${key}:CCW\n${shape.toString()}`);
+}

@@ -117,6 +117,18 @@ h2, h3 {
     background-color: aqua;
 }
 
+.pink {
+    background-color: palevioletred;
+}
+
+.lime {
+    background-color: limegreen;
+}
+
+.night {
+    background-color: darkblue;
+}
+
 .first::before {
     content: "●";
 }
