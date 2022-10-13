@@ -177,7 +177,7 @@ h2, h3 {
 }
 
 .white::before {
-    content: "💩";
+    content: "🐡";
 }
 
 .first::before {
