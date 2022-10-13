@@ -118,9 +118,9 @@ export class Board {
     const col = i % this.width;
 
     if (row === 0) {
-      div.textContent = `${col}`;
+      div.textContent = `${(col + 1) % 10}`;
     } else if (col === 0) {
-      div.textContent = `${row}`;
+      div.textContent = `${(row + 1) % 10}`;
     }
 
     return div;
