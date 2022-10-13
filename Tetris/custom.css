@@ -2,8 +2,10 @@
     --bg: rgb(245, 245, 245);
     --bg-header: rgb(207, 207, 207);
     --bg-footer: rgb(207, 207, 207);
+    --bg-main: lemonchiffon;
     --bg-board: rgb(209, 245, 245);
     --bg-cell: rgb(239, 255, 255);
+    --bg-info: rgb(239, 255, 255);
 
     --fg: black;
     --fg-sep: darkgray;
@@ -13,6 +15,7 @@
     --bd: black;
     --bd-board: rgb(113, 206, 206);
     --bd-cell: rgb(28, 50, 50);
+    --bd-info: rgb(113, 206, 206);
 }
 
 body {
@@ -37,7 +40,6 @@ footer {
 
 h1 {
     margin-bottom: 0.5rem;
-    text-decoration: underline;
 }
 
 h2, h3 {
@@ -46,7 +48,15 @@ h2, h3 {
 
 #main {
     flex-grow: 1;
-    border: 2px solid var(--bd);
+    background-color: var(--bg-main);
+    padding-top: 2.0rem;
+    padding-bottom: 2.0rem;
+    padding-left: 1.0rem;
+    padding-right: 1.0rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-auto-flow: column;
     gap: 1rem;
 }
 
@@ -61,32 +71,51 @@ h2, h3 {
     border-right: 1px solid var(--fg-sep);
 }
 
-.app-status {
-    color: var(--fg-app-status);
-}
-
-.app-status__working {
-    color: var(--fg-app-status-working);
-}
-
 #board {
-    margin: 0 auto;
-    margin-top: 2.0rem;
     background-color: var(--bg-board);
-    max-width: fit-content;
+    width: fit-content;
+    height: fit-content;
     border: 1px solid var(--bd-board);
     display: grid;
     grid-template-columns: repeat(10, auto);
     gap: 2px;
 }
 
+#nextBoard {
+    background-color: var(--bg-board);
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid var(--bd-board);
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 2px;
+}
+
+#info {
+    width: 420px;
+    min-height: 400px;
+    height: fit-content;
+    background-color: var(--bg-info);
+    border: 1px solid var(--bd-info);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#stats {
+    padding: 0.5rem;
+    text-align: left;
+}
+
 .cell {
     background-color: var(--bg-cell);
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     display: grid;
     place-content: center;
     border: 2px solid var(--bd-cell);
+}
+
+.empty {
+    border: none;
 }
 
 .red {

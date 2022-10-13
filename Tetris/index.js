@@ -6,6 +6,9 @@ const resetEl = document.querySelector("#reset");
 const pauseEl = document.querySelector("#pause");
 const clockEl = document.querySelector("#clock");
 const boardEl = document.querySelector("#board");
+const playTimeEl = document.querySelector("#playTime");
+const scoreEl = document.querySelector("#score");
+const nextBoardEl = document.querySelector("#nextBoard");
 
 const CELL_COLOURS = {
   EMPTY: 0,
@@ -171,6 +174,7 @@ class App {
     this.height = height;
     this.numEntries = this.width * this.height;
     this.score = 0;
+    this.playTime = 0;
     this.board = Array(this.width * this.height).fill(0);
   }
 
@@ -331,6 +335,56 @@ class App {
       el.appendChild(cellEl);
     }
   }
+
+  drawNextBoard(el) {
+    el.innerHTML = "";
+
+    const miniBoard = new Array(4 * 4).fill(0);
+    const shape = this.randomShape();
+
+    const width = shape.width;
+    const height = shape.height;
+    const yoffs = height < 4 ? 1 : 0;
+    const xoffs = width < 4 ? 1 : 0;
+
+    for (let sy = 0; sy < height; sy++) {
+      for (let sx = 0; sx < width; sx++) {
+        if (shape.hasCellAt(sx, sy)) {
+          miniBoard[(sy + yoffs) * 4 + sx + xoffs] = shape.isFirst(sx, sy)
+            ? -shape.colour
+            : shape.colour;
+        }
+      }
+    }
+
+    // Now we can render the next shape from a mini board!
+    for (let i = 0; i < 16; i++) {
+      const cell = miniBoard[i];
+      const cellEl = this.newCellEl(cell);
+      el.appendChild(cellEl);
+    }
+  }
+
+  drawScore(el) {
+    this.score++;
+
+    el.textContent = `Score: ${Math.floor(this.score / 4)}`;
+  }
+
+  padNum(num) {
+    if (num < 10) {
+      return `0${num}`;
+    } else {
+      return num;
+    }
+  }
+
+  drawPlayTime(el) {
+    const mins = Math.floor(this.score / 60);
+    const secs = this.score % 60;
+
+    el.textContent = `Play Time: ${this.padNum(mins)}:${this.padNum(secs)}`;
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -379,6 +433,9 @@ function tick() {
   });
 
   app.drawBoard(boardEl);
+  app.drawNextBoard(nextBoardEl);
+  app.drawScore(scoreEl);
+  app.drawPlayTime(playTimeEl);
 
   subHeadingEl.textContent = `Tetris #${ticks}`;
 }
@@ -412,6 +469,8 @@ function initDisplay() {
 
   app.clearBoard();
   app.drawBoard(boardEl);
+  app.drawScore(scoreEl);
+  app.drawPlayTime(playTimeEl);
 
   clock(clockEl);
 }
@@ -427,11 +486,35 @@ async function init() {
 
 init();
 
-for (let key in SHAPES) {
-  const sh = SHAPES[key];
-  const shape = new Shape(sh);
-  console.log(`${key}\n${shape.toString()}`);
+// TODO:
+// Extract Board and other classes into own files
+//   Tests needed!
+// Make playable
+//   Tick function to `App`
+//     Pick shape, start it moving down
+//     Keyboard - rotate, move, drop
+//       Need to support rotate and move in `one move`
+//       Capture key strokes and apply up to 2 perhaps?
+//     Add next shape when current `hits`
+//     Clear complete rows
+//     Speed up
+//   Score keeping and time keeping
+//   Next shape selection and display - bit ugly
+//   Reset and Pause in `App`
+//   Top score
+//   Scale based on available display size
 
-  shape.rotateCCW();
-  console.log(`${key}:CCW\n${shape.toString()}`);
+// ----------------------------------------------------------------------------
+
+// Debug stuff
+
+if (false) {
+  for (let key in SHAPES) {
+    const sh = SHAPES[key];
+    const shape = new Shape(sh);
+    console.log(`${key}\n${shape.toString()}`);
+
+    shape.rotateCCW();
+    console.log(`${key}:CCW\n${shape.toString()}`);
+  }
 }
