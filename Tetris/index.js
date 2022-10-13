@@ -169,7 +169,11 @@ class App {
 
       if (ticks > 1) {
         app.theBoard.removeShape(shape, shapeX, shapeY);
-        shape.rotateCCW();
+        if (i % 2 == 0) {
+          shape.rotateCCW();
+        } else {
+          shape.rotateCW();
+        }
       }
 
       app.theBoard.placeShape(shape, shapeX, shapeY);
