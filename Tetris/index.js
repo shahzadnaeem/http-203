@@ -1,5 +1,9 @@
 import { clock } from "./utils.js";
 
+import { Shape } from "./src/shape.js";
+import { Board } from "./src/board.js";
+import { SHAPES, SHAPE_NAMES } from "./src/shapes.js";
+
 const mainEl = document.querySelector("#main");
 const subHeadingEl = document.querySelector("#subheading");
 const resetEl = document.querySelector("#reset");
@@ -9,173 +13,41 @@ const boardEl = document.querySelector("#board");
 const playTimeEl = document.querySelector("#playTime");
 const scoreEl = document.querySelector("#score");
 const nextBoardEl = document.querySelector("#nextBoard");
+const demoBoardEl = document.querySelector("#demoBoard");
 
-const CELL_COLOURS = {
-  EMPTY: 0,
-  RED: 1,
-  PURPLE: 2,
-  GREEN: 3,
-  YELLOW: 4,
-  ORANGE: 5,
-  BLUE: 6,
-  CYAN: 7,
-  FIRST: 8,
-  PINK: 9,
-  LIME: 10,
-  NIGHT: 11,
+const ALL_ELEMENTS = {
+  MAIN: mainEl,
+  SUBHEADING: subHeadingEl,
+  RESET: resetEl,
+  PAUSE: pauseEl,
+  BOARD: boardEl,
+  PLAYTIME: playTimeEl,
+  SCORE: scoreEl,
+  NEXTSHAPE: nextBoardEl,
+  DEMOBOARD: demoBoardEl,
 };
 
-const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());
-
-const FIRST_CELL_CHAR = "X";
-const CELL_CHAR = "x";
-const EMPTY_CELL_CHAR = ".";
-
-const SHAPES = {
-  LINE4: { grid: ["....", "xxxx"], colour: CELL_COLOURS.CYAN },
-  ELL1: { grid: ["x..", "xxx"], colour: CELL_COLOURS.BLUE },
-  ELL2: { grid: ["..x", "xxx"], colour: CELL_COLOURS.ORANGE },
-  SQUARE: { grid: ["xx", "xx"], colour: CELL_COLOURS.YELLOW },
-  STEP: { grid: [".xx", "xx."], colour: CELL_COLOURS.GREEN },
-  TEE: { grid: [".x.", "xxx"], colour: CELL_COLOURS.PURPLE },
-  STEP2: { grid: ["xx.", ".xx"], colour: CELL_COLOURS.RED },
-  ZIG: { grid: ["x.x", "xxx"], colour: CELL_COLOURS.PINK },
-  FISH: { grid: ["xx ", "xx ", "  x"], colour: CELL_COLOURS.LIME },
-  FANG: { grid: ["x x", " x ", " x "], colour: CELL_COLOURS.NIGHT },
+const APP_ELEMENTS = {
+  SUBHEADING: subHeadingEl,
+  BOARD: boardEl,
+  PLAYTIME: playTimeEl,
+  SCORE: scoreEl,
+  NEXTSHAPE: nextBoardEl,
+  DEMOBOARD: demoBoardEl,
 };
-
-const SHAPE_NAMES = Object.keys(SHAPES);
-
-class Shape {
-  constructor(rawShape) {
-    this.initShape(rawShape);
-  }
-
-  initShape(rawShape) {
-    this.grid = [...rawShape.grid];
-    this.colour = rawShape.colour;
-    this.valid = false;
-
-    const maxWidth = this.grid.reduce(
-      (width, row) => (row.length > width ? row.length : width),
-      0
-    );
-
-    if (maxWidth === 0) {
-      throw new Error(`Invalid grid: Empty!`);
-    }
-
-    if (!this.grid.every((row) => row.length === maxWidth)) {
-      throw new Error(`Invalid grid: not all rows same width`);
-    }
-
-    if (!this.grid.some((row) => row.includes(CELL_CHAR))) {
-      throw new Error(`Invalid grid: No active present!`);
-    }
-
-    this.width = maxWidth;
-    this.height = this.grid.length;
-
-    while (this.height !== this.width) {
-      this.grid.push(EMPTY_CELL_CHAR.repeat(this.width));
-      this.height++;
-    }
-
-    // Now create internal representation
-    this.initGridMatrix();
-
-    this.valid = true;
-  }
-
-  initGridMatrix() {
-    this.gridMatrix = [];
-
-    for (let x = 0; x < this.width; x++) {
-      this.gridMatrix.push(Array(this.height).fill(0));
-    }
-
-    const rows = this.grid.map((row) =>
-      row.split("").map((ch) => (ch === CELL_CHAR ? 1 : 0))
-    );
-
-    let first = true;
-    let y = 0;
-    rows.forEach((row) => {
-      let x = 0;
-      row.forEach((v) => {
-        if (v && first) {
-          this.firstX = x;
-          this.firstY = y;
-          first = false;
-        }
-
-        this.gridMatrix[x++][y] = v;
-      });
-      y++;
-    });
-  }
-
-  hasCellAt(x, y) {
-    return this.gridMatrix[x][y] !== 0;
-  }
-
-  isFirst(x, y) {
-    return x === this.firstX && y === this.firstY;
-  }
-
-  cloneGridMatrix() {
-    return this.gridMatrix.map((col) => [...col]);
-  }
-
-  rotateCCW() {
-    const origGridMatrix = this.cloneGridMatrix();
-
-    [this.firstX, this.firstY] = [this.firstY, this.height - 1 - this.firstX];
-
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        this.gridMatrix[x][y] = origGridMatrix[this.width - 1 - y][x];
-      }
-    }
-  }
-
-  rotateCW() {
-    const origGridMatrix = this.cloneGridMatrix();
-
-    [this.firstX, this.firstY] = [this.firstY, this.width - 1 - this.firstX];
-
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        this.gridMatrix[x][y] = origGridMatrix[y][this.width - 1 - x];
-      }
-    }
-  }
-
-  toString() {
-    let s = `${this.colour}\n`;
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        if (this.isFirst(x, y)) {
-          s += FIRST_CELL_CHAR;
-        } else {
-          s += this.gridMatrix[x][y] ? CELL_CHAR : EMPTY_CELL_CHAR;
-        }
-      }
-      s += "\n";
-    }
-
-    return s;
-  }
-}
 
 class App {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
-    this.numEntries = this.width * this.height;
+  constructor(width, height, elements) {
+    this.theBoard = new Board(width, height);
+
+    // NOTE: Demo board!
+    this.demoBoard = new Board(10, 15);
+
+    this.elements = elements;
+    this.keys = [];
+    this.lines = 0;
     this.score = 0;
     this.playTime = 0;
-    this.board = Array(this.width * this.height).fill(0);
   }
 
   randomInt(a, b) {
@@ -193,77 +65,7 @@ class App {
     return new Shape(rawShape);
   }
 
-  fitsOnBoard(shape, x, y) {
-    const width = shape.width;
-    const height = shape.height;
-
-    return x + width <= this.width && y + height <= this.height;
-  }
-
-  setBoard(val, x, y) {
-    this.board[y * this.width + x] = val;
-  }
-
-  getBoard(x, y) {
-    return this.board[y * this.width + x];
-  }
-
-  isEmpty(x, y) {
-    return this.board[y * this.width + x] === CELL_COLOURS.EMPTY;
-  }
-
-  canPlaceShape(shape, x, y) {
-    if (!this.fitsOnBoard(shape, x, y)) {
-      return false;
-    }
-
-    const width = shape.width;
-    const height = shape.height;
-
-    for (let sy = 0; sy < height; sy++) {
-      for (let sx = 0; sx < width; sx++) {
-        if (shape.hasCellAt(sx, sy)) {
-          if (!this.isEmpty(x + sx, y + sy)) {
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  placeShape(shape, x, y) {
-    const width = shape.width;
-    const height = shape.height;
-
-    for (let sy = 0; sy < height; sy++) {
-      for (let sx = 0; sx < width; sx++) {
-        if (shape.hasCellAt(sx, sy)) {
-          this.setBoard(
-            shape.isFirst(sx, sy) ? -shape.colour : shape.colour,
-            x + sx,
-            y + sy
-          );
-        }
-      }
-    }
-  }
-
-  removeShape(shape, x, y) {
-    const width = shape.width;
-    const height = shape.height;
-
-    for (let sy = 0; sy < height; sy++) {
-      for (let sx = 0; sx < width; sx++) {
-        if (shape.hasCellAt(sx, sy)) {
-          this.setBoard(CELL_COLOURS.EMPTY, x + sx, y + sy);
-        }
-      }
-    }
-  }
-
-  randomShapes(num = 20, below = 0) {
+  randomShapes(board, num = 20, below = 0) {
     for (let i = 0; i < num; i++) {
       let shape, x, y;
 
@@ -286,60 +88,19 @@ class App {
 
         const width = shape.width;
         const height = shape.height;
-        x = this.randomInt(0, this.width - width);
-        y = this.randomInt(0, this.height - height - below) + below;
-      } while (!this.canPlaceShape(shape, x, y));
+        x = this.randomInt(0, board.width - width + 1);
+        y = this.randomInt(0, board.height - height - below + 1) + below;
+      } while (!board.canPlaceShape(shape, x, y));
 
-      this.placeShape(shape, x, y);
+      board.placeShape(shape, x, y);
     }
   }
 
-  clearBoard() {
-    for (let i = 0; i < this.numEntries; i++) {
-      this.board[i] = CELL_COLOURS.EMPTY;
-    }
-  }
+  drawNextShape(el) {
+    const MINI_BOARD_WIDTH = 4;
+    const MINI_BOARD_HEIGHT = 4;
 
-  randomBoard() {
-    for (let i = 0; i < this.numEntries; i++) {
-      this.board[i] = this.randomInt(0, CELL_CLASSES.length);
-    }
-  }
-
-  newCellEl(cell) {
-    const div = document.createElement("div");
-    if (cell < 0) {
-      div.classList.add("cell", CELL_CLASSES[-cell]);
-      div.classList.add("cell", CELL_CLASSES[CELL_COLOURS.FIRST]);
-    } else {
-      div.classList.add("cell", CELL_CLASSES[cell]);
-    }
-
-    return div;
-  }
-
-  shiftBoardDown(rows = 1) {
-    const amount = rows * this.width;
-    this.board.copyWithin(amount, 0, this.numEntries - amount);
-    for (let i = 0; i < amount; i++) {
-      this.board[i] = CELL_COLOURS.EMPTY;
-    }
-  }
-
-  drawBoard(el) {
-    el.innerHTML = "";
-
-    for (let i = 0; i < this.numEntries; i++) {
-      const cell = this.board[i];
-      const cellEl = this.newCellEl(cell);
-      el.appendChild(cellEl);
-    }
-  }
-
-  drawNextBoard(el) {
-    el.innerHTML = "";
-
-    const miniBoard = new Array(4 * 4).fill(0);
+    const miniBoard = new Board(MINI_BOARD_WIDTH, MINI_BOARD_HEIGHT);
     const shape = this.randomShape();
 
     const width = shape.width;
@@ -347,22 +108,26 @@ class App {
     const yoffs = height < 4 ? 1 : 0;
     const xoffs = width < 4 ? 1 : 0;
 
-    for (let sy = 0; sy < height; sy++) {
-      for (let sx = 0; sx < width; sx++) {
-        if (shape.hasCellAt(sx, sy)) {
-          miniBoard[(sy + yoffs) * 4 + sx + xoffs] = shape.isFirst(sx, sy)
-            ? -shape.colour
-            : shape.colour;
-        }
+    miniBoard.placeShape(shape, xoffs, yoffs);
+
+    miniBoard.drawBoard(el);
+  }
+
+  drawDemoBoard(el, tickNo) {
+    this.demoBoard.shiftBoardDown();
+
+    if (tickNo % 5 === 3) {
+      for (let i = 4; i < 7; i++) {
+        this.demoBoard.board[70 + i] = 4;
       }
     }
 
-    // Now we can render the next shape from a mini board!
-    for (let i = 0; i < 16; i++) {
-      const cell = miniBoard[i];
-      const cellEl = this.newCellEl(cell);
-      el.appendChild(cellEl);
+    if (tickNo % 5 === 0) {
+      this.demoBoard.removeRow(10);
     }
+
+    this.randomShapes(this.demoBoard, 1);
+    this.demoBoard.drawBoard(el);
   }
 
   drawScore(el) {
@@ -385,6 +150,37 @@ class App {
 
     el.textContent = `Play Time: ${this.padNum(mins)}:${this.padNum(secs)}`;
   }
+
+  init() {
+    app.theBoard.clearBoard();
+    app.theBoard.drawBoard(this.elements.BOARD);
+
+    app.demoBoard.clearBoard();
+    app.demoBoard.drawBoard(this.elements.DEMOBOARD);
+
+    app.drawScore(this.elements.SCORE);
+    app.drawPlayTime(this.elements.PLAYTIME);
+  }
+
+  tick(tickNo) {
+    allShapes.forEach((shape, i) => {
+      const shapeX = (i % 2) * 5 + 1;
+      const shapeY = Math.floor(i / 2) * 5 + 1;
+
+      if (ticks > 1) {
+        app.theBoard.removeShape(shape, shapeX, shapeY);
+        shape.rotateCCW();
+      }
+
+      app.theBoard.placeShape(shape, shapeX, shapeY);
+    });
+
+    app.theBoard.drawBoard(this.elements.BOARD);
+    app.drawNextShape(this.elements.NEXTSHAPE);
+    app.drawDemoBoard(this.elements.DEMOBOARD, tickNo);
+    app.drawScore(this.elements.SCORE);
+    app.drawPlayTime(this.elements.PLAYTIME);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -392,7 +188,7 @@ class App {
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 25;
 
-const app = new App(BOARD_WIDTH, BOARD_HEIGHT);
+const app = new App(BOARD_WIDTH, BOARD_HEIGHT, APP_ELEMENTS);
 
 function resetListener() {
   paused = true;
@@ -420,24 +216,9 @@ function tick() {
 
   ticks++;
 
-  allShapes.forEach((shape, i) => {
-    const shapeX = (i % 2) * 5 + 1;
-    const shapeY = Math.floor(i / 2) * 5 + 1;
+  app.tick(ticks);
 
-    if (ticks > 1) {
-      app.removeShape(shape, shapeX, shapeY);
-      shape.rotateCCW();
-    }
-
-    app.placeShape(shape, shapeX, shapeY);
-  });
-
-  app.drawBoard(boardEl);
-  app.drawNextBoard(nextBoardEl);
-  app.drawScore(scoreEl);
-  app.drawPlayTime(playTimeEl);
-
-  subHeadingEl.textContent = `Tetris #${ticks}`;
+  ALL_ELEMENTS.SUBHEADING.textContent = `Tetris #${ticks}`;
 }
 
 // ----------------------------------------------------------------------------
@@ -446,18 +227,18 @@ function togglePaused() {
   paused = !paused;
 
   if (paused) {
-    pauseEl.textContent = "Resume";
+    ALL_ELEMENTS.PAUSE.textContent = "Resume";
   } else {
-    pauseEl.textContent = "Pause";
+    ALL_ELEMENTS.PAUSE.textContent = "Pause";
   }
 }
 
 function initControls() {
-  resetEl.removeEventListener("click", resetListener);
-  resetEl.addEventListener("click", resetListener);
+  ALL_ELEMENTS.RESET.removeEventListener("click", resetListener);
+  ALL_ELEMENTS.RESET.addEventListener("click", resetListener);
 
-  pauseEl.removeEventListener("click", togglePaused);
-  pauseEl.addEventListener("click", togglePaused);
+  ALL_ELEMENTS.PAUSE.removeEventListener("click", togglePaused);
+  ALL_ELEMENTS.PAUSE.addEventListener("click", togglePaused);
 
   if (tickInterval) {
     clearInterval(tickInterval);
@@ -465,12 +246,9 @@ function initControls() {
 }
 
 function initDisplay() {
-  subHeadingEl.textContent = `Tetris`;
+  ALL_ELEMENTS.SUBHEADING.textContent = `Tetris ...`;
 
-  app.clearBoard();
-  app.drawBoard(boardEl);
-  app.drawScore(scoreEl);
-  app.drawPlayTime(playTimeEl);
+  app.init();
 
   clock(clockEl);
 }

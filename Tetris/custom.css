@@ -85,9 +85,21 @@ h2, h3 {
     background-color: var(--bg-board);
     width: fit-content;
     height: fit-content;
+    margin: 0 auto;
     border: 1px solid var(--bd-board);
     display: grid;
     grid-template-columns: repeat(4, auto);
+    gap: 2px;
+}
+
+#demoBoard {
+    margin-top: 1.4rem;
+    background-color: var(--bg-board);
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid var(--bd-board);
+    display: grid;
+    grid-template-columns: repeat(10, auto);
     gap: 2px;
 }
 
@@ -95,12 +107,15 @@ h2, h3 {
     width: 420px;
     min-height: 400px;
     height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    justify-content: center;
     background-color: var(--bg-info);
     border: 1px solid var(--bd-info);
 }
 
 #stats {
-    padding: 0.5rem;
+    padding: 1.0rem;
     text-align: left;
 }
 
