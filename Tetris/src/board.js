@@ -11,6 +11,7 @@ export const CELL_COLOURS = {
   PINK: 9,
   LIME: 10,
   NIGHT: 11,
+  WHITE: 12,
 };
 
 const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());
@@ -21,6 +22,7 @@ export class Board {
     this.height = height;
     this.numEntries = this.width * this.height;
     this.board = Array(this.width * this.height).fill(0);
+    this.rowsDeleted = 0;
   }
 
   fitsOnBoard(shape, x, y) {
@@ -99,9 +101,17 @@ export class Board {
     }
   }
 
-  randomBoard() {
-    for (let i = 0; i < this.numEntries; i++) {
-      this.board[i] = this.randomInt(0, CELL_CLASSES.length);
+  randomInt(a, b) {
+    return Math.floor(Math.random() * (b - a) + a);
+  }
+
+  setRandomRow() {
+    const y = this.randomInt(0, this.height);
+
+    for (let x = 0; x < this.width; x++) {
+      if (!this.getBoard(x, y)) {
+        this.setBoard(CELL_COLOURS.WHITE, x, y);
+      }
     }
   }
 
@@ -138,10 +148,30 @@ export class Board {
     this.board.copyWithin(
       this.width,
       0,
-      this.numEntries - (this.height - (row - 1)) * this.width
+      this.numEntries - (this.height - row) * this.width
     );
     for (let i = 0; i < this.width; i++) {
       this.board[i] = CELL_COLOURS.EMPTY;
+    }
+
+    this.rowsDeleted++;
+  }
+
+  isRowComplete(row) {
+    for (let x = 0; x < this.width; x++) {
+      if (!this.board[row * this.width + x]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  removeCompleteRows() {
+    for (let y = 0; y < this.height; y++) {
+      if (this.isRowComplete(y)) {
+        this.removeRow(y);
+      }
     }
   }
 

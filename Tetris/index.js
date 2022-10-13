@@ -78,12 +78,10 @@ class App {
 
         shape = this.randomShape();
 
-        const rand = Math.floor(Math.random() * 3);
+        const rand = Math.floor(Math.random() * 4);
 
-        if (rand % 3 === 1) {
+        for (let i = 0; i < rand; i++) {
           shape.rotateCCW();
-        } else if (rand % 3 === 2) {
-          shape.rotateCW();
         }
 
         const width = shape.width;
@@ -117,23 +115,23 @@ class App {
     this.demoBoard.shiftBoardDown();
 
     if (tickNo % 5 === 3) {
-      for (let i = 4; i < 7; i++) {
-        this.demoBoard.board[70 + i] = 4;
-      }
+      this.demoBoard.setRandomRow();
     }
 
     if (tickNo % 5 === 0) {
-      this.demoBoard.removeRow(10);
+      this.demoBoard.removeCompleteRows();
     }
 
-    this.randomShapes(this.demoBoard, 1);
+    this.randomShapes(this.demoBoard, 3);
     this.demoBoard.drawBoard(el);
   }
 
   drawScore(el) {
     this.score++;
 
-    el.textContent = `Score: ${Math.floor(this.score / 4)}`;
+    el.textContent = `Score: ${Math.floor(this.score / 4)}, Rows: ${
+      this.demoBoard.rowsDeleted
+    }`;
   }
 
   padNum(num) {
