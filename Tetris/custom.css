@@ -97,7 +97,6 @@ h2, h3 {
     height: fit-content;
     background-color: var(--bg-info);
     border: 1px solid var(--bd-info);
-    font-family: 'Courier New', Courier, monospace;
 }
 
 #stats {

@@ -9,7 +9,7 @@ const START_NUM = 1;
 const END_NUM = 20;
 
 let letters = false;
-let numLimit = 0;
+let numLimit = 20;
 
 function resetListener() {
   init();
@@ -62,24 +62,27 @@ function initControls() {
 }
 
 function initDisplay() {
-
   const clientRects = mainEl.getClientRects();
   const boundingRect = mainEl.getBoundingClientRect();
 
   console.log(`mainEl.clientRects = ${JSON.stringify(clientRects)}`);
-  console.log(`mainEl.boundingRects = ${JSON.stringify(boundingRect)}`)
+  console.log(`mainEl.boundingRects = ${JSON.stringify(boundingRect)}`);
 
   let maxX = mainEl.clientWidth;
   let maxY = mainEl.clientHeight;
 
   console.log(`mainEl = ${maxX} x ${maxY}`);
 
-  if ( maxY === 0 ) {
+  if (maxY === 0) {
     // Make an adjustment - 4 is the mainEl top + bottom border width
     maxY = document.documentElement.clientHeight - headerEl.clientHeight - 4;
 
-    console.log(`document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`);
-    console.log(`headerEl = ${headerEl.clientWidth} x ${headerEl.clientHeight}`);
+    console.log(
+      `document.documentEl = ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`
+    );
+    console.log(
+      `headerEl = ${headerEl.clientWidth} x ${headerEl.clientHeight}`
+    );
     console.log(`😠 mainEl = ${maxX} x ${maxY}`);
   }
 
@@ -91,7 +94,7 @@ function initDisplay() {
     CALC_END_NUM = 20;
   }
 
-  if ( CALC_END_NUM > 100 ) {
+  if (CALC_END_NUM > 100) {
     CALC_END_NUM = 100;
   }
 
@@ -185,7 +188,7 @@ function initDisplay() {
     let tryLimit = 50;
 
     do {
-      tryLimit --;
+      tryLimit--;
 
       x = Math.floor(Math.random() * (maxX - size));
       y = Math.floor(Math.random() * (maxY - size));
@@ -248,7 +251,7 @@ function initDisplay() {
     );
     div.style.setProperty("border-radius", "25%");
 
-    div.addEventListener('click', (ev) => {
+    div.addEventListener("click", (ev) => {
       div.classList.add("wobble");
 
       setTimeout(() => {
