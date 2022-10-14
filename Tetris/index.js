@@ -114,6 +114,7 @@ init();
 // Make playable
 //   Tick function to `App`
 //     Speed up
+//   Rotation wobble fix
 //   Top score
 //   Scale based on available display size
 
