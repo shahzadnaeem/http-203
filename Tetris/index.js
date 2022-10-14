@@ -113,16 +113,7 @@ init();
 //   Tests needed!
 // Make playable
 //   Tick function to `App`
-//     Pick shape, start it moving down
-//     Keyboard - rotate, move, drop
-//       Need to support rotate and move in `one move`
-//       Capture key strokes and apply up to 2 perhaps?
-//     Add next shape when current `hits`
-//     Clear complete rows
 //     Speed up
-//   Score keeping and time keeping
-//   Next shape selection and display - bit ugly
-//   Reset and Pause in `App`
 //   Top score
 //   Scale based on available display size
 
