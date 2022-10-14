@@ -72,6 +72,16 @@ export class Shape {
     });
   }
 
+  clone() {
+    let cloned = Object.assign(this);
+
+    for (let x = 0; x < this.width; x++) {
+      cloned.gridMatrix[x] = [...this.gridMatrix[x]];
+    }
+
+    return cloned;
+  }
+
   hasCellAt(x, y) {
     return this.gridMatrix[x][y] !== 0;
   }

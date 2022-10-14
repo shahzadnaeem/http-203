@@ -25,9 +25,17 @@ export class Board {
     this.rowsDeleted = 0;
   }
 
+  isOnBoard(x, y) {
+    return x < this.width && x >= 0 && y < this.height && y >= 0;
+  }
+
   fitsOnBoard(shape, x, y) {
     const width = shape.width;
     const height = shape.height;
+
+    if (!this.isOnBoard(x, y)) {
+      return false;
+    }
 
     return x + width <= this.width && y + height <= this.height;
   }
@@ -45,17 +53,16 @@ export class Board {
   }
 
   canPlaceShape(shape, x, y) {
-    if (!this.fitsOnBoard(shape, x, y)) {
-      return false;
-    }
-
     const width = shape.width;
     const height = shape.height;
 
     for (let sy = 0; sy < height; sy++) {
       for (let sx = 0; sx < width; sx++) {
         if (shape.hasCellAt(sx, sy)) {
-          if (!this.isEmpty(x + sx, y + sy)) {
+          if (
+            !this.isOnBoard(x + sx, y + sy) ||
+            !this.isEmpty(x + sx, y + sy)
+          ) {
             return false;
           }
         }
@@ -123,15 +130,19 @@ export class Board {
     } else {
       div.classList.add("cell", CELL_CLASSES[cell]);
     }
+    if (i % 2 === 0) {
+      div.classList.add("cellAlt");
+    }
 
     const row = Math.floor(i / this.width);
     const col = i % this.width;
 
-    if (row === 0) {
-      div.textContent = `${(col + 1) % 10}`;
-    } else if (col === 0) {
-      div.textContent = `${(row + 1) % 10}`;
-    }
+    // Row, Col number on Board
+    // if (row === 0) {
+    //   div.textContent = `${(col + 1) % 10}`;
+    // } else if (col === 0) {
+    //   div.textContent = `${(row + 1) % 10}`;
+    // }
 
     return div;
   }
@@ -168,11 +179,16 @@ export class Board {
   }
 
   removeCompleteRows() {
+    let completed = 0;
+
     for (let y = 0; y < this.height; y++) {
       if (this.isRowComplete(y)) {
         this.removeRow(y);
+        completed++;
       }
     }
+
+    return completed;
   }
 
   drawBoard(el) {

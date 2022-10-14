@@ -5,6 +5,7 @@
     --bg-main: lemonchiffon;
     --bg-board: rgb(209, 245, 245);
     --bg-cell: rgb(239, 255, 255);
+    --bg-cell-alt: rgb(255, 255, 239);
     --bg-info: rgb(239, 255, 255);
 
     --fg: black;
@@ -101,6 +102,7 @@ h2, h3 {
     display: grid;
     grid-template-columns: repeat(10, auto);
     gap: 2px;
+    display: none;
 }
 
 #info {
@@ -123,9 +125,22 @@ h2, h3 {
     background-color: var(--bg-cell);
     width: 35px;
     height: 35px;
-    display: grid;
-    place-content: center;
+    /* display: grid;
+    place-content: center; */
     border: 2px solid var(--bd-cell);
+    overflow: hidden;
+    position: relative;
+}
+
+.cellAlt {
+    background-color: var(--bg-cell-alt);
+}
+
+.gameOver {
+    background-color: red;
+    color: yellow;
+    font-weight: bolder;
+    text-align: center;
 }
 
 .empty {
@@ -178,8 +193,14 @@ h2, h3 {
 
 .white::before {
     content: "🐡";
+    position: absolute;
+    left: 8px;
+    top: 2px;
 }
 
 .first::before {
-    content: "●";
+    content: "⟲";
+    position: absolute;
+    left: 8px;
+    top: 2px;
 }

@@ -1,189 +1,38 @@
 import { clock } from "./utils.js";
 
-import { Shape } from "./src/shape.js";
-import { Board } from "./src/board.js";
-import { SHAPES, SHAPE_NAMES } from "./src/shapes.js";
+import { App } from "./src/app.js";
 
 const mainEl = document.querySelector("#main");
-const subHeadingEl = document.querySelector("#subheading");
 const resetEl = document.querySelector("#reset");
 const pauseEl = document.querySelector("#pause");
 const clockEl = document.querySelector("#clock");
 const boardEl = document.querySelector("#board");
 const playTimeEl = document.querySelector("#playTime");
 const scoreEl = document.querySelector("#score");
+const nextEl = document.querySelector("#next");
 const nextBoardEl = document.querySelector("#nextBoard");
 const demoBoardEl = document.querySelector("#demoBoard");
 
 const ALL_ELEMENTS = {
   MAIN: mainEl,
-  SUBHEADING: subHeadingEl,
   RESET: resetEl,
   PAUSE: pauseEl,
   BOARD: boardEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
+  NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
   DEMOBOARD: demoBoardEl,
 };
 
 const APP_ELEMENTS = {
-  SUBHEADING: subHeadingEl,
   BOARD: boardEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
+  NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
   DEMOBOARD: demoBoardEl,
 };
-
-class App {
-  constructor(width, height, elements) {
-    this.theBoard = new Board(width, height);
-
-    // NOTE: Demo board!
-    this.demoBoard = new Board(10, 15);
-
-    this.elements = elements;
-    this.keys = [];
-    this.lines = 0;
-    this.score = 0;
-    this.playTime = 0;
-  }
-
-  randomInt(a, b) {
-    return Math.floor(Math.random() * (b - a) + a);
-  }
-
-  randomFromArray(array) {
-    const idx = this.randomInt(0, array.length);
-    return array[idx];
-  }
-
-  randomShape() {
-    const rawShape = SHAPES[this.randomFromArray(SHAPE_NAMES)];
-
-    return new Shape(rawShape);
-  }
-
-  randomShapes(board, num = 20, below = 0) {
-    for (let i = 0; i < num; i++) {
-      let shape, x, y;
-
-      let tries = 0;
-      do {
-        tries++;
-        if (tries > 5) {
-          return;
-        }
-
-        shape = this.randomShape();
-
-        const rand = Math.floor(Math.random() * 4);
-
-        for (let i = 0; i < rand; i++) {
-          shape.rotateCCW();
-        }
-
-        const width = shape.width;
-        const height = shape.height;
-        x = this.randomInt(0, board.width - width + 1);
-        y = this.randomInt(0, board.height - height - below + 1) + below;
-      } while (!board.canPlaceShape(shape, x, y));
-
-      board.placeShape(shape, x, y);
-    }
-  }
-
-  drawNextShape(el) {
-    const MINI_BOARD_WIDTH = 4;
-    const MINI_BOARD_HEIGHT = 4;
-
-    const miniBoard = new Board(MINI_BOARD_WIDTH, MINI_BOARD_HEIGHT);
-    const shape = this.randomShape();
-
-    const width = shape.width;
-    const height = shape.height;
-    const yoffs = height < 4 ? 1 : 0;
-    const xoffs = width < 4 ? 1 : 0;
-
-    miniBoard.placeShape(shape, xoffs, yoffs);
-
-    miniBoard.drawBoard(el);
-  }
-
-  drawDemoBoard(el, tickNo) {
-    this.demoBoard.shiftBoardDown();
-
-    if (tickNo % 5 === 3) {
-      this.demoBoard.setRandomRow();
-    }
-
-    if (tickNo % 5 === 0) {
-      this.demoBoard.removeCompleteRows();
-    }
-
-    this.randomShapes(this.demoBoard, 3);
-    this.demoBoard.drawBoard(el);
-  }
-
-  drawScore(el) {
-    this.score++;
-
-    el.textContent = `Score: ${Math.floor(this.score / 4)}, Rows: ${
-      this.demoBoard.rowsDeleted
-    }`;
-  }
-
-  padNum(num) {
-    if (num < 10) {
-      return `0${num}`;
-    } else {
-      return num;
-    }
-  }
-
-  drawPlayTime(el) {
-    const mins = Math.floor(this.score / 60);
-    const secs = this.score % 60;
-
-    el.textContent = `Play Time: ${this.padNum(mins)}:${this.padNum(secs)}`;
-  }
-
-  init() {
-    app.theBoard.clearBoard();
-    app.theBoard.drawBoard(this.elements.BOARD);
-
-    app.demoBoard.clearBoard();
-    app.demoBoard.drawBoard(this.elements.DEMOBOARD);
-
-    app.drawScore(this.elements.SCORE);
-    app.drawPlayTime(this.elements.PLAYTIME);
-  }
-
-  tick(tickNo) {
-    allShapes.forEach((shape, i) => {
-      const shapeX = (i % 2) * 5 + 1;
-      const shapeY = Math.floor(i / 2) * 5 + 1;
-
-      if (ticks > 1) {
-        app.theBoard.removeShape(shape, shapeX, shapeY);
-        if (i % 2 == 0) {
-          shape.rotateCCW();
-        } else {
-          shape.rotateCW();
-        }
-      }
-
-      app.theBoard.placeShape(shape, shapeX, shapeY);
-    });
-
-    app.theBoard.drawBoard(this.elements.BOARD);
-    app.drawNextShape(this.elements.NEXTSHAPE);
-    app.drawDemoBoard(this.elements.DEMOBOARD, tickNo);
-    app.drawScore(this.elements.SCORE);
-    app.drawPlayTime(this.elements.PLAYTIME);
-  }
-}
 
 // ----------------------------------------------------------------------------
 
@@ -198,16 +47,13 @@ function resetListener() {
 
   ticks = 0;
 
-  allShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
-
   init();
 }
 
 let ticks = 0;
-let tickSpeed = 1000;
+const ticksPerSec = 50;
+let tickSpeed = Math.floor(1000 / ticksPerSec);
 let tickInterval = false;
-
-let allShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
 
 let paused = false;
 
@@ -219,8 +65,6 @@ function tick() {
   ticks++;
 
   app.tick(ticks);
-
-  ALL_ELEMENTS.SUBHEADING.textContent = `Tetris #${ticks}`;
 }
 
 // ----------------------------------------------------------------------------
@@ -248,9 +92,7 @@ function initControls() {
 }
 
 function initDisplay() {
-  ALL_ELEMENTS.SUBHEADING.textContent = `Tetris ...`;
-
-  app.init();
+  app.newGame();
 
   clock(clockEl);
 }
