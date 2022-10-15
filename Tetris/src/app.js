@@ -46,11 +46,13 @@ export class App {
     this.nextShape = this.randomShape();
 
     this.tickNo = 0;
-    this.tickPlayRate = 30; // Auto drop after this many ticks
+    this.minTickPlayRate = 5;
+    this.tickPlayRate = 30; // Move piece after this many ticks
     this.ticksPerSec = 50;
     this.commands = [];
     this.lines = 0;
     this.score = 0;
+    this.nextTimeAdjustScore = this.TimeAdjustScoreInc = 100;
     this.playTime = 0;
     this.gameOver = false;
   }
@@ -85,11 +87,11 @@ export class App {
   recordKeyPress(ev) {
     if (!this.gameOver) {
       if (this.commands.length > 2) {
-        console.log(`Key dropped: ${ev.code}`);
+        // console.log(`Key dropped: ${ev.code}`);
         return;
       }
 
-      console.log(`Key pressed: ${ev.code}`);
+      // console.log(`Key pressed: ${ev.code}`);
 
       switch (ev.code) {
         case "ArrowUp":
@@ -226,9 +228,7 @@ export class App {
   }
 
   drawScore(el) {
-    el.textContent = `Score: ${this.score + 100 * this.lines}, Rows: ${
-      this.lines
-    }`;
+    el.textContent = `Score: ${this.score}, Rows: ${this.lines}`;
   }
 
   drawNext(el) {
@@ -267,13 +267,13 @@ export class App {
     }
     this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
 
-    if (this.position.y === newY) {
-      this.score++;
-    } else {
+    if (this.position.y !== newY) {
       newPicked = true;
+      this.score++;
       this.pickNextShape();
 
       this.lines += this.theBoard.removeCompleteRows();
+      this.score += 100 * this.lines;
 
       this.gameOver = !this.theBoard.canPlaceShape(
         this.currShape,
@@ -330,18 +330,30 @@ export class App {
       this.currShape.rotateCW();
     }
     this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
+
+    this.redraw();
   }
 
   drop() {
     let done = false;
+    let rowsDropped = 0;
     do {
       done = this.down();
+      if (!done) {
+        rowsDropped++;
+      }
     } while (!done);
+
+    if (rowsDropped > 1) {
+      this.score++;
+      this.redraw();
+    }
   }
 
   doCommand() {
     const command = this.commands.shift();
-    console.log(`command: ${command}...`);
+    // console.log(`command: ${command}...`);
+
     if (command === COMMANDS.DOWN) {
       this.down();
     } else if (command === COMMANDS.LEFT) {
@@ -388,6 +400,13 @@ export class App {
       this.down();
 
       this.redraw();
+
+      if (this.score >= this.nextTimeAdjustScore) {
+        if (this.tickPlayRate > this.minTickPlayRate) {
+          this.tickPlayRate--;
+        }
+        this.nextTimeAdjustScore = this.score + this.TimeAdjustScoreInc;
+      }
     }
   }
 }
