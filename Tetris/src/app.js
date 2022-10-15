@@ -25,10 +25,15 @@ export class App {
       NEXT_SHAPE_BOARD_SIZE
     );
 
-    // NOTE: Demo board!
-    const DEMO_BOARD_WIDTH = 10;
-    const DEMO_BOARD_HEIGHT = 18;
-    this.demoBoard = new Board(DEMO_BOARD_WIDTH, DEMO_BOARD_HEIGHT);
+    this.showDemoBoard = false;
+
+    if (this.showDemoBoard) {
+      const DEMO_BOARD_WIDTH = 10;
+      const DEMO_BOARD_HEIGHT = 18;
+      this.demoBoard = new Board(DEMO_BOARD_WIDTH, DEMO_BOARD_HEIGHT);
+    } else {
+      this.elements.DEMOBOARD.style = "display:none;";
+    }
 
     this.elements = elements;
 
@@ -385,7 +390,9 @@ export class App {
       this.playTime++;
     }
 
-    this.drawDemoBoard();
+    if (this.showDemoBoard) {
+      this.drawDemoBoard();
+    }
 
     if (this.commands.length) {
       this.doCommand();
