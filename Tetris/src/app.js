@@ -28,7 +28,7 @@ export class App {
     // NOTE: Demo board!
     const DEMO_BOARD_WIDTH = 10;
     const DEMO_BOARD_HEIGHT = 18;
-    // this.demoBoard = new Board(DEMO_BOARD_WIDTH, DEMO_BOARD_HEIGHT);
+    this.demoBoard = new Board(DEMO_BOARD_WIDTH, DEMO_BOARD_HEIGHT);
 
     this.elements = elements;
 
@@ -68,9 +68,6 @@ export class App {
 
     this.initGameData();
     this.initUI();
-
-    // this.demoBoard.clearBoard();
-    // this.demoBoard.drawBoard(this.elements.DEMOBOARD);
   }
 
   initUI() {
@@ -81,17 +78,17 @@ export class App {
     this.theBoard.clearBoard();
     this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
 
+    this.demoBoard.clearBoard();
+    this.demoBoard.drawBoard(this.elements.DEMOBOARD);
+
     this.redraw();
   }
 
   recordKeyPress(ev) {
     if (!this.gameOver) {
       if (this.commands.length > 2) {
-        // console.log(`Key dropped: ${ev.code}`);
         return;
       }
-
-      // console.log(`Key pressed: ${ev.code}`);
 
       switch (ev.code) {
         case "ArrowUp":
@@ -177,7 +174,7 @@ export class App {
     }
   }
 
-  drawNextShape(el) {
+  drawNextShape() {
     const width = this.nextShape.width;
     const height = this.nextShape.height;
     const yoffs = height < 4 ? 1 : 0;
@@ -186,31 +183,28 @@ export class App {
     this.nextShapeBoard.clearBoard();
     this.nextShapeBoard.placeShape(this.nextShape, xoffs, yoffs);
 
-    this.nextShapeBoard.drawBoard(el);
+    this.nextShapeBoard.drawBoard(this.elements.NEXTSHAPE);
   }
 
-  drawDemoBoard(el) {
-    this.demoBoard.shiftBoardDown();
+  drawDemoBoard() {
+    if (this.tickNo % 50 === 1) {
+      this.demoBoard.shiftBoardDown();
 
-    if (this.tickNo % 5 === 3) {
-      this.demoBoard.setRandomRow();
+      if (Math.floor(this.tickNo / 50) % 5 === 3) {
+        this.demoBoard.setRandomRow();
+      }
+      if (Math.floor(this.tickNo / 50) % 5 === 0) {
+        this.demoBoard.removeCompleteRows();
+        this.randomlyPlaceShape(this.demoBoard, this.randomShape(), 3);
+      }
+      this.demoBoard.drawBoard(this.elements.DEMOBOARD);
     }
 
-    if (this.tickNo % 5 === 0) {
-      this.demoBoard.removeCompleteRows();
-      this.randomlyPlaceShape(this.demoBoard, this.nextShape, 3);
-      this.pickNextShape();
-    }
-
-    this.demoBoard.drawBoard(el);
-
-    // if (this.tickNo % 20 === 0) {
+    // if (this.tickNo % 50 === 1) {
     //   demoShapes.forEach((shape, i) => {
     //     let shapeX = (i % 2) * 5 + 1;
     //     let shapeY = Math.floor(i / 2) * 4 + 1;
-
     //     if (i > 1) shapeY++;
-
     //     if (this.tickNo > 1) {
     //       this.demoBoard.removeShape(shape, shapeX, shapeY);
     //       if (i % 2 == 0) {
@@ -219,26 +213,25 @@ export class App {
     //         shape.rotateCW();
     //       }
     //     }
-
     //     this.demoBoard.placeShape(shape, shapeX, shapeY);
     //   });
-
     //   this.demoBoard.drawBoard(this.elements.DEMOBOARD);
     // }
   }
 
-  drawScore(el) {
-    el.textContent = `Score: ${this.score}, Rows: ${this.lines}`;
+  drawScore() {
+    this.elements.HIGHSCORE.textContent = `High Score: ${this.highScore}`;
+    this.elements.SCORE.textContent = `Score: ${this.score}, Rows: ${this.lines}`;
   }
 
-  drawNext(el) {
-    el.textContent = `Next Shape`;
-    el.classList.remove("gameOver");
+  drawNext() {
+    this.elements.NEXT.textContent = `Next Shape`;
+    this.elements.NEXT.classList.remove("gameOver");
   }
 
-  drawGameOver(el) {
-    el.textContent = "GAME OVER!";
-    el.classList.add("gameOver");
+  drawGameOver() {
+    this.elements.NEXT.textContent = "GAME OVER!";
+    this.elements.NEXT.classList.add("gameOver");
   }
 
   padNum(num) {
@@ -249,11 +242,13 @@ export class App {
     }
   }
 
-  drawPlayTime(el) {
+  drawPlayTime() {
     const mins = Math.floor(this.playTime / 60);
     const secs = this.playTime % 60;
 
-    el.textContent = `Play Time: ${this.padNum(mins)}:${this.padNum(secs)}`;
+    this.elements.PLAYTIME.textContent = `Play Time: ${this.padNum(
+      mins
+    )}:${this.padNum(secs)}`;
   }
 
   down() {
@@ -369,13 +364,13 @@ export class App {
 
   redraw() {
     if (this.gameOver) {
-      this.drawGameOver(this.elements.NEXT);
+      this.drawGameOver();
     } else {
       this.theBoard.drawBoard(this.elements.BOARD);
-      this.drawPlayTime(this.elements.PLAYTIME);
-      this.drawScore(this.elements.SCORE);
-      this.drawNext(this.elements.NEXT);
-      this.drawNextShape(this.elements.NEXTSHAPE);
+      this.drawPlayTime();
+      this.drawScore();
+      this.drawNext();
+      this.drawNextShape();
     }
   }
 
@@ -390,7 +385,7 @@ export class App {
       this.playTime++;
     }
 
-    // this.drawDemoBoard(this.elements.DEMOBOARD);
+    this.drawDemoBoard();
 
     if (this.commands.length) {
       this.doCommand();

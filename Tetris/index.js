@@ -7,6 +7,7 @@ const resetEl = document.querySelector("#reset");
 const pauseEl = document.querySelector("#pause");
 const clockEl = document.querySelector("#clock");
 const boardEl = document.querySelector("#board");
+const highScoreEl = document.querySelector("#highScore");
 const playTimeEl = document.querySelector("#playTime");
 const scoreEl = document.querySelector("#score");
 const nextEl = document.querySelector("#next");
@@ -18,6 +19,7 @@ const ALL_ELEMENTS = {
   RESET: resetEl,
   PAUSE: pauseEl,
   BOARD: boardEl,
+  HIGHSCORE: highScoreEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
   NEXT: nextEl,
@@ -27,6 +29,7 @@ const ALL_ELEMENTS = {
 
 const APP_ELEMENTS = {
   BOARD: boardEl,
+  HIGHSCORE: highScoreEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
   NEXT: nextEl,
