@@ -17,6 +17,7 @@ let demoShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
 export class App {
   constructor(width, height, elements) {
     this.theBoard = new Board(width, height);
+    this.elements = elements;
 
     const NEXT_SHAPE_BOARD_SIZE = 4;
 
@@ -35,8 +36,6 @@ export class App {
       this.elements.DEMOBOARD.style = "display:none;";
     }
 
-    this.elements = elements;
-
     this.highScore = 0;
 
     // Keyboard handler
@@ -46,24 +45,30 @@ export class App {
   }
 
   initGameData() {
-    this.initPosition();
-    this.currShape = this.randomShape();
-    this.nextShape = this.randomShape();
+    this.pickNextShape(true);
+    this.rowsDropped = 0;
 
     this.tickNo = 0;
-    this.minTickPlayRate = 5;
+    this.minTickPlayRate = 10;
     this.tickPlayRate = 30; // Move piece after this many ticks
     this.ticksPerSec = 50;
     this.commands = [];
     this.lines = 0;
     this.score = 0;
-    this.nextTimeAdjustScore = this.TimeAdjustScoreInc = 100;
+    this.nextTimeAdjustScore = 1000;
+    this.TimeAdjustScoreInc = 1000;
     this.playTime = 0;
     this.gameOver = false;
   }
 
   initPosition() {
     this.position = { x: Math.floor(this.theBoard.width / 2) - 1, y: 0 };
+  }
+
+  pickNextShape(start = false) {
+    this.initPosition();
+    this.currShape = start ? this.randomShape() : this.nextShape;
+    this.nextShape = this.randomShape();
   }
 
   newGame() {
@@ -83,8 +88,10 @@ export class App {
     this.theBoard.clearBoard();
     this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
 
-    this.demoBoard.clearBoard();
-    this.demoBoard.drawBoard(this.elements.DEMOBOARD);
+    if (this.showDemoBoard) {
+      this.demoBoard.clearBoard();
+      this.demoBoard.drawBoard(this.elements.DEMOBOARD);
+    }
 
     this.redraw();
   }
@@ -113,16 +120,10 @@ export class App {
           break;
       }
     } else {
-      if (ev.code === "Space") {
+      if (ev.code === "Enter") {
         this.newGame();
       }
     }
-  }
-
-  pickNextShape() {
-    this.initPosition();
-    this.currShape = this.nextShape;
-    this.nextShape = this.randomShape();
   }
 
   randomInt(a, b) {
@@ -226,7 +227,7 @@ export class App {
 
   drawScore() {
     this.elements.HIGHSCORE.textContent = `High Score: ${this.highScore}`;
-    this.elements.SCORE.textContent = `Score: ${this.score}, Rows: ${this.lines}`;
+    this.elements.SCORE.textContent = `Score: ${this.score}, Lines: ${this.lines}`;
   }
 
   drawNext() {
@@ -256,7 +257,7 @@ export class App {
     )}:${this.padNum(secs)}`;
   }
 
-  down() {
+  down(hard = false) {
     let newPicked = false;
 
     const newY = this.position.y + 1;
@@ -264,23 +265,30 @@ export class App {
     this.theBoard.removeShape(this.currShape, this.position.x, this.position.y);
     if (this.theBoard.canPlaceShape(this.currShape, this.position.x, newY)) {
       this.position.y = newY;
+      this.rowsDropped++;
     }
     this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
 
     if (this.position.y !== newY) {
       newPicked = true;
-      this.score++;
+      this.score += hard ? this.rowsDropped * 2 : this.rowsDropped;
       this.pickNextShape();
+      this.rowsDropped = 0;
 
       this.lines += this.theBoard.removeCompleteRows();
       this.score += 100 * this.lines;
 
-      this.gameOver = !this.theBoard.canPlaceShape(
-        this.currShape,
-        this.position.x,
-        this.position.y
-      );
+      if (
+        !this.theBoard.canPlaceShape(
+          this.currShape,
+          this.position.x,
+          this.position.y
+        )
+      ) {
+        this.gameOver = true;
+      }
 
+      // Place anyway at end of game
       this.theBoard.placeShape(
         this.currShape,
         this.position.x,
@@ -336,18 +344,10 @@ export class App {
 
   drop() {
     let done = false;
-    let rowsDropped = 0;
     do {
-      done = this.down();
-      if (!done) {
-        rowsDropped++;
-      }
+      // We are hard dropping
+      done = this.down(true);
     } while (!done);
-
-    if (rowsDropped > 1) {
-      this.score++;
-      this.redraw();
-    }
   }
 
   doCommand() {
@@ -368,14 +368,15 @@ export class App {
   }
 
   redraw() {
+    this.theBoard.drawBoard(this.elements.BOARD);
+    this.drawPlayTime();
+    this.drawScore();
+    this.drawNextShape();
+
     if (this.gameOver) {
       this.drawGameOver();
     } else {
-      this.theBoard.drawBoard(this.elements.BOARD);
-      this.drawPlayTime();
-      this.drawScore();
       this.drawNext();
-      this.drawNextShape();
     }
   }
 
