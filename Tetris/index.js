@@ -125,7 +125,7 @@ init();
 //   Tests needed!
 // Others
 //   Tick function to `App`
-//     Levels with Speed up
+//     Levels with Speed up - speed up too fast and only one level
 //   Rotation wobble fix
 //   Scale based on available display size
 //     CSS fixes - too many specific classes

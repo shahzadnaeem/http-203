@@ -12,14 +12,15 @@ export const SHAPES = {
   // XZIG: { name: "XZIG", grid: ["x.", ".."], colour: CELL_COLOURS.PINK },
 
   // XFISH: { name: "XFISH", grid: ["xx.", "xxx"], colour: CELL_COLOURS.LIME },
-  // XFISH2: { name: "XFISH2", grid: ["xx.", "xx.", "..x"], colour: CELL_COLOURS.LIME },
   // XFANG: { name: "XFANG", grid: ["xx", " x"], colour: CELL_COLOURS.NIGHT },
+  // XPAIR: { name: "XPAIR", grid: ["x.", ".x"], colour: CELL_COLOURS.FIRE },
+
+  // XFISH2: { name: "XFISH2", grid: ["xx.", "xx.", "..x"], colour: CELL_COLOURS.LIME },
   // XSTAR: {
   //   name: "XSTAR",
   //   grid: [".xx.", "xxxx", "xxxx", ".xx."],
   //   colour: CELL_COLOURS.GHOST,
   // },
-  // XPAIR: { name: "XPAIR", grid: ["x.", ".x"], colour: CELL_COLOURS.FIRE },
 };
 
 export const SHAPE_NAMES = Object.keys(SHAPES);
