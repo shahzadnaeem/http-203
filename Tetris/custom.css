@@ -238,6 +238,14 @@ h2, h3 {
     background-color: darkblue;
 }
 
+.ghost {
+    background-color: silver;
+}
+
+.fire {
+    background-color: orangered;
+}
+
 .white {
     background-color: white;
 }

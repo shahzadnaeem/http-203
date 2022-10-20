@@ -11,7 +11,9 @@ export const CELL_COLOURS = {
   PINK: 9,
   LIME: 10,
   NIGHT: 11,
-  WHITE: 12,
+  GHOST: 12,
+  FIRE: 13,
+  WHITE: 14,
 };
 
 const CELL_CLASSES = Object.keys(CELL_COLOURS).map((k) => k.toLowerCase());

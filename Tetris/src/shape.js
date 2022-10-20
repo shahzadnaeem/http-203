@@ -8,6 +8,7 @@ export class Shape {
   }
 
   initShape(rawShape) {
+    this.name = rawShape.name;
     this.grid = rawShape.grid;
     this.colour = rawShape.colour;
     this.firstX = this.firstY = -1;

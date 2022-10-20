@@ -8,6 +8,7 @@ const COMMANDS = {
   RIGHT: 3,
   DOWN: 4,
   DROP: 5,
+  ZIG: 6,
 };
 
 const COMMAND_NAMES = Object.keys(COMMANDS);
@@ -127,6 +128,9 @@ export class App {
         case "Space":
           this.commands.push(COMMANDS.DROP);
           break;
+        case "KeyX":
+          this.commands.push(COMMANDS.ZIG);
+          break;
       }
     } else {
       if (ev.code === "Enter" || ev.code === "Space") {
@@ -148,9 +152,11 @@ export class App {
     const shapeName = this.randomFromArray(SHAPE_NAMES);
     const rawShape = SHAPES[shapeName];
 
-    this.shapeStats[shapeName].count++;
+    const shape = new Shape(rawShape);
 
-    return new Shape(rawShape);
+    this.shapeStats[shape.name].count++;
+
+    return shape;
   }
 
   randomlyPlaceShape(board, shape, num = 20, below = 0) {
@@ -398,6 +404,27 @@ export class App {
     } while (!done);
   }
 
+  zig() {
+    if (SHAPES.XZIG) {
+      this.theBoard.removeShape(
+        this.currShape,
+        this.position.x,
+        this.position.y
+      );
+      this.shapeStats[this.currShape.name].count--;
+
+      this.currShape = new Shape(SHAPES.XZIG);
+      this.theBoard.placeShape(
+        this.currShape,
+        this.position.x,
+        this.position.y
+      );
+      this.shapeStats[this.currShape.name].count++;
+
+      this.redraw();
+    }
+  }
+
   doCommand() {
     const command = this.commands.shift();
 
@@ -411,6 +438,8 @@ export class App {
       this.rotate();
     } else if (command === COMMANDS.DROP) {
       this.drop();
+    } else if (command === COMMANDS.ZIG) {
+      this.zig();
     }
   }
 
