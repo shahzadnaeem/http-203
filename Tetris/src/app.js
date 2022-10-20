@@ -13,18 +13,17 @@ const COMMANDS = {
 const COMMAND_NAMES = Object.keys(COMMANDS);
 
 let demoShapes = SHAPE_NAMES.map((k) => new Shape(SHAPES[k]));
+let demoShapesByName = {};
+SHAPE_NAMES.forEach((name, i) => (demoShapesByName[name] = demoShapes[i]));
+
+const SHAPE_BOARD_SIZE = 4;
 
 export class App {
   constructor(width, height, elements) {
     this.theBoard = new Board(width, height);
     this.elements = elements;
 
-    const NEXT_SHAPE_BOARD_SIZE = 4;
-
-    this.nextShapeBoard = new Board(
-      NEXT_SHAPE_BOARD_SIZE,
-      NEXT_SHAPE_BOARD_SIZE
-    );
+    // this.nextShapeBoard = new Board(SHAPE_BOARD_SIZE, SHAPE_BOARD_SIZE);
 
     this.showDemoBoard = false;
 
@@ -32,8 +31,9 @@ export class App {
       const DEMO_BOARD_WIDTH = 10;
       const DEMO_BOARD_HEIGHT = 18;
       this.demoBoard = new Board(DEMO_BOARD_WIDTH, DEMO_BOARD_HEIGHT);
+      this.elements.DEMOBOARD.classList.remove("hidden");
     } else {
-      this.elements.DEMOBOARD.style = "display:none;";
+      this.elements.DEMOBOARD.classList.add("hidden");
     }
 
     this.highScore = 0;
@@ -45,6 +45,8 @@ export class App {
   }
 
   initGameData() {
+    this.initShapeStats();
+
     this.pickNextShape(true);
     this.rowsDropped = 0;
 
@@ -59,6 +61,14 @@ export class App {
     this.TimeAdjustScoreInc = 1000;
     this.playTime = 0;
     this.gameOver = false;
+  }
+
+  initShapeStats() {
+    this.shapeStats = {};
+
+    SHAPE_NAMES.forEach((name) => {
+      this.shapeStats[name] = { name, count: 0 };
+    });
   }
 
   initPosition() {
@@ -81,7 +91,6 @@ export class App {
   }
 
   initUI() {
-    this.nextShapeBoard.clearBoard();
     this.drawNextShape(this.elements.NEXTSHAPE);
 
     // START
@@ -120,7 +129,7 @@ export class App {
           break;
       }
     } else {
-      if (ev.code === "Enter") {
+      if (ev.code === "Enter" || ev.code === "Space") {
         this.newGame();
       }
     }
@@ -136,7 +145,10 @@ export class App {
   }
 
   randomShape() {
-    const rawShape = SHAPES[this.randomFromArray(SHAPE_NAMES)];
+    const shapeName = this.randomFromArray(SHAPE_NAMES);
+    const rawShape = SHAPES[shapeName];
+
+    this.shapeStats[shapeName].count++;
 
     return new Shape(rawShape);
   }
@@ -180,49 +192,58 @@ export class App {
     }
   }
 
-  drawNextShape() {
-    const width = this.nextShape.width;
-    const height = this.nextShape.height;
-    const yoffs = height < 4 ? 1 : 0;
-    const xoffs = width < 4 ? 1 : 0;
+  drawShapeTo(shape, boardEl) {
+    const width = shape.width;
+    const height = shape.height;
+    const yoffs = height < SHAPE_BOARD_SIZE ? 1 : 0;
+    const xoffs = width < SHAPE_BOARD_SIZE ? 1 : 0;
 
-    this.nextShapeBoard.clearBoard();
-    this.nextShapeBoard.placeShape(this.nextShape, xoffs, yoffs);
-
-    this.nextShapeBoard.drawBoard(this.elements.NEXTSHAPE);
+    const board = new Board(SHAPE_BOARD_SIZE, SHAPE_BOARD_SIZE);
+    board.placeShape(shape, xoffs, yoffs);
+    board.drawBoard(boardEl);
+    boardEl.classList.add("shapeBoard");
   }
 
-  drawDemoBoard() {
-    if (this.tickNo % 50 === 1) {
-      this.demoBoard.shiftBoardDown();
+  drawNextShape() {
+    this.drawShapeTo(this.nextShape, this.elements.NEXTSHAPE);
 
-      if (Math.floor(this.tickNo / 50) % 5 === 3) {
-        this.demoBoard.setRandomRow();
+    this.elements.NEXTSHAPE.classList.remove("gameOver");
+  }
+
+  drawDemoBoard(random = false) {
+    if (random) {
+      if (this.tickNo % 50 === 1) {
+        this.demoBoard.shiftBoardDown();
+
+        if (Math.floor(this.tickNo / 50) % 5 === 3) {
+          this.demoBoard.setRandomRow();
+        }
+        if (Math.floor(this.tickNo / 50) % 5 === 0) {
+          this.demoBoard.removeCompleteRows();
+          this.randomlyPlaceShape(this.demoBoard, this.randomShape(), 3);
+        }
+        this.demoBoard.drawBoard(this.elements.DEMOBOARD);
       }
-      if (Math.floor(this.tickNo / 50) % 5 === 0) {
-        this.demoBoard.removeCompleteRows();
-        this.randomlyPlaceShape(this.demoBoard, this.randomShape(), 3);
+    } else {
+      if (this.tickNo % 250 === 1) {
+        demoShapes.forEach((shape, i) => {
+          let shapeX = (i % 2) * 5 + 1;
+          let shapeY = Math.floor(i / 2) * 4 + 1;
+          if (i > 1) shapeY++;
+          if (this.tickNo > 1) {
+            this.demoBoard.removeShape(shape, shapeX, shapeY);
+            if (i % 2 == 0) {
+              shape.rotateCCW();
+            } else {
+              shape.rotateCCW();
+              // shape.rotateCW();
+            }
+          }
+          this.demoBoard.placeShape(shape, shapeX, shapeY);
+        });
+        this.demoBoard.drawBoard(this.elements.DEMOBOARD);
       }
-      this.demoBoard.drawBoard(this.elements.DEMOBOARD);
     }
-
-    // if (this.tickNo % 50 === 1) {
-    //   demoShapes.forEach((shape, i) => {
-    //     let shapeX = (i % 2) * 5 + 1;
-    //     let shapeY = Math.floor(i / 2) * 4 + 1;
-    //     if (i > 1) shapeY++;
-    //     if (this.tickNo > 1) {
-    //       this.demoBoard.removeShape(shape, shapeX, shapeY);
-    //       if (i % 2 == 0) {
-    //         shape.rotateCCW();
-    //       } else {
-    //         shape.rotateCW();
-    //       }
-    //     }
-    //     this.demoBoard.placeShape(shape, shapeX, shapeY);
-    //   });
-    //   this.demoBoard.drawBoard(this.elements.DEMOBOARD);
-    // }
   }
 
   drawScore() {
@@ -238,6 +259,7 @@ export class App {
   drawGameOver() {
     this.elements.NEXT.textContent = "GAME OVER!";
     this.elements.NEXT.classList.add("gameOver");
+    this.elements.NEXTSHAPE.classList.add("gameOver");
   }
 
   padNum(num) {
@@ -255,6 +277,38 @@ export class App {
     this.elements.PLAYTIME.textContent = `Play Time: ${this.padNum(
       mins
     )}:${this.padNum(secs)}`;
+  }
+
+  drawShapeStats() {
+    this.elements.SHAPESTATS.innerHTML = "";
+
+    for (let name in this.shapeStats) {
+      const stat = this.shapeStats[name];
+
+      const statEl = document.createElement("div");
+      statEl.classList.add("shapeStat");
+      const shapeEl = document.createElement("div");
+      this.drawShapeTo(demoShapesByName[name], shapeEl);
+      const countEl = document.createElement("h2");
+      countEl.textContent = stat.count;
+
+      statEl.append(shapeEl, countEl);
+
+      this.elements.SHAPESTATS.append(statEl);
+    }
+  }
+
+  drawStats() {
+    this.drawPlayTime();
+    this.drawScore();
+
+    if (this.gameOver) {
+      this.drawGameOver();
+    } else {
+      this.drawNext();
+      this.drawNextShape();
+      this.drawShapeStats();
+    }
   }
 
   down(hard = false) {
@@ -301,9 +355,7 @@ export class App {
     return newPicked;
   }
 
-  left() {
-    const newX = this.position.x - 1;
-
+  moveHorizontally(newX) {
     this.theBoard.removeShape(this.currShape, this.position.x, this.position.y);
     if (this.theBoard.canPlaceShape(this.currShape, newX, this.position.y)) {
       this.position.x = newX;
@@ -313,16 +365,12 @@ export class App {
     this.redraw();
   }
 
+  left() {
+    this.moveHorizontally(this.position.x - 1);
+  }
+
   right() {
-    const newX = this.position.x + 1;
-
-    this.theBoard.removeShape(this.currShape, this.position.x, this.position.y);
-    if (this.theBoard.canPlaceShape(this.currShape, newX, this.position.y)) {
-      this.position.x = newX;
-    }
-    this.theBoard.placeShape(this.currShape, this.position.x, this.position.y);
-
-    this.redraw();
+    this.moveHorizontally(this.position.x + 1);
   }
 
   rotate() {
@@ -352,7 +400,6 @@ export class App {
 
   doCommand() {
     const command = this.commands.shift();
-    // console.log(`command: ${command}...`);
 
     if (command === COMMANDS.DOWN) {
       this.down();
@@ -369,17 +416,10 @@ export class App {
 
   redraw() {
     this.theBoard.drawBoard(this.elements.BOARD);
-    this.drawPlayTime();
-    this.drawScore();
-    this.drawNextShape();
-
-    if (this.gameOver) {
-      this.drawGameOver();
-    } else {
-      this.drawNext();
-    }
+    this.drawStats();
   }
 
+  // TODO: Need to manage ticks in app - and pause/resume
   tick(tickNo) {
     if (this.gameOver) {
       return;

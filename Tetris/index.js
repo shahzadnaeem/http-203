@@ -12,6 +12,7 @@ const playTimeEl = document.querySelector("#playTime");
 const scoreEl = document.querySelector("#score");
 const nextEl = document.querySelector("#next");
 const nextBoardEl = document.querySelector("#nextBoard");
+const shapeStatsEl = document.querySelector("#shapeStats");
 const demoBoardEl = document.querySelector("#demoBoard");
 
 const ALL_ELEMENTS = {
@@ -24,6 +25,7 @@ const ALL_ELEMENTS = {
   SCORE: scoreEl,
   NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
+  SHAPESTATS: shapeStatsEl,
   DEMOBOARD: demoBoardEl,
 };
 
@@ -34,6 +36,7 @@ const APP_ELEMENTS = {
   SCORE: scoreEl,
   NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
+  SHAPESTATS: shapeStatsEl,
   DEMOBOARD: demoBoardEl,
 };
 
@@ -80,6 +83,8 @@ function togglePaused() {
   } else {
     ALL_ELEMENTS.PAUSE.textContent = "Pause";
   }
+
+  ALL_ELEMENTS.PAUSE.blur();
 }
 
 function initControls() {
@@ -88,6 +93,9 @@ function initControls() {
 
   ALL_ELEMENTS.PAUSE.removeEventListener("click", togglePaused);
   ALL_ELEMENTS.PAUSE.addEventListener("click", togglePaused);
+
+  ALL_ELEMENTS.RESET.blur();
+  ALL_ELEMENTS.PAUSE.blur();
 
   if (tickInterval) {
     clearInterval(tickInterval);
@@ -114,12 +122,12 @@ init();
 // TODO:
 // Extract Board and other classes into own files
 //   Tests needed!
-// Make playable
+// Others
 //   Tick function to `App`
-//     Speed up
+//     Levels with Speed up
 //   Rotation wobble fix
-//   Top score
 //   Scale based on available display size
+//     CSS fixes - too many specific classes
 
 // ----------------------------------------------------------------------------
 

@@ -7,11 +7,15 @@
     --bg-cell: rgb(239, 255, 255);
     --bg-cell-alt: rgb(255, 255, 239);
     --bg-info: rgb(239, 255, 255);
+    --bg-buttons: rgb(120, 120, 120);
 
     --fg: black;
     --fg-sep: darkgray;
     --fg-app-status: green;
     --fg-app-status-working: crimson;
+    --fg-buttons: lightyellow;
+
+    --focus: black;
 
     --bd: black;
     --bd-board: rgb(113, 206, 206);
@@ -45,6 +49,16 @@ h1 {
 
 h2, h3 {
     margin-bottom: 0.25rem;
+}
+
+#reset, #pause {
+    background-color: var(--bg-buttons);
+    color: var(--fg-buttons);
+    border-radius: 1rem;
+}
+
+#reset:focus, #pause:focus {
+    outline: 1px solid var(--focus);
 }
 
 #main {
@@ -82,7 +96,7 @@ h2, h3 {
     gap: 2px;
 }
 
-#nextBoard {
+.shapeBoard {
     background-color: var(--bg-board);
     width: fit-content;
     height: fit-content;
@@ -103,7 +117,36 @@ h2, h3 {
     grid-template-columns: repeat(10, auto);
     gap: 2px;
     margin-bottom: 1.4rem;
-    /* display: none; */
+}
+
+#shapeStats {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    /* gap: 0.5rem; */
+    margin-bottom: 1.4rem;
+}
+
+#instructions {
+    margin-bottom: 1.4rem;
+}
+
+.shapeStat {
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid blueviolet; */
+}
+
+.shapeStat .shapeBoard {
+    margin-bottom: 0.25rem;
+}
+
+/* TODO: This feels hacky! */
+#demoBoard.hidden {
+    display: none;
+}
+
+.hidden {
+    display: none;
 }
 
 #info {
@@ -133,15 +176,24 @@ h2, h3 {
     position: relative;
 }
 
+.shapeStat .cell {
+    width: 20px;
+    height: 20px;
+}
+
 .cellAlt {
     background-color: var(--bg-cell-alt);
 }
 
-.gameOver {
+#next.gameOver {
     background-color: red;
     color: yellow;
     font-weight: bolder;
     text-align: center;
+}
+
+#nextBoard.gameOver {
+    border: 4px solid red;
 }
 
 .empty {
@@ -199,7 +251,7 @@ h2, h3 {
     top: 2px;
 }
 
-.first::before {
+:is(#board, #nextBoard) .first::before {
     content: "⟲";
     position: absolute;
     left: 8px;
