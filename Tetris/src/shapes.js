@@ -9,9 +9,10 @@ export const SHAPES = {
   TEE: { grid: [".x.", "xxx"], colour: CELL_COLOURS.PURPLE },
   STEP2: { grid: ["xx.", ".xx"], colour: CELL_COLOURS.RED },
   // Extras!
-  // ZIG: { grid: ["x.", ".."], colour: CELL_COLOURS.PINK },
-  // FISH: { grid: ["xx.", "xxx"], colour: CELL_COLOURS.LIME },
-  // FANG: { grid: ["xx", " x"], colour: CELL_COLOURS.NIGHT },
+  ZIG: { grid: ["x.", ".."], colour: CELL_COLOURS.PINK },
+  FISH: { grid: ["xx.", "xxx"], colour: CELL_COLOURS.LIME },
+  // FISH2: { grid: ["xx.", "xx.", "..x"], colour: CELL_COLOURS.LIME },
+  FANG: { grid: ["xx", " x"], colour: CELL_COLOURS.NIGHT },
 };
 
 export const SHAPE_NAMES = Object.keys(SHAPES);
