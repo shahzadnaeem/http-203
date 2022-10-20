@@ -19,9 +19,10 @@ SHAPE_NAMES.forEach((name, i) => (demoShapesByName[name] = demoShapes[i]));
 const SHAPE_BOARD_SIZE = 4;
 
 export class App {
-  constructor(width, height, elements) {
+  constructor(width, height, elements, ticksPerSec) {
     this.theBoard = new Board(width, height);
     this.elements = elements;
+    this.ticksPerSec = ticksPerSec;
 
     // this.nextShapeBoard = new Board(SHAPE_BOARD_SIZE, SHAPE_BOARD_SIZE);
 
@@ -51,9 +52,8 @@ export class App {
     this.rowsDropped = 0;
 
     this.tickNo = 0;
-    this.minTickPlayRate = 10;
-    this.tickPlayRate = 30; // Move piece after this many ticks
-    this.ticksPerSec = 50;
+    this.minTickPlayRate = Math.floor(0.2 * this.ticksPerSec);
+    this.tickPlayRate = Math.floor(0.8 * this.ticksPerSec); // Move piece after this many ticks
     this.commands = [];
     this.lines = 0;
     this.score = 0;
@@ -427,8 +427,11 @@ export class App {
 
     this.tickNo++;
 
-    if (this.tickNo % 50 === 0) {
+    if (this.tickNo % this.ticksPerSec === 0) {
       this.playTime++;
+
+      // NOTE: Keeps time display smooth
+      this.drawPlayTime();
     }
 
     if (this.showDemoBoard) {

@@ -45,7 +45,9 @@ const APP_ELEMENTS = {
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 25;
 
-const app = new App(BOARD_WIDTH, BOARD_HEIGHT, APP_ELEMENTS);
+const TICKS_PER_SEC = 30;
+
+const app = new App(BOARD_WIDTH, BOARD_HEIGHT, APP_ELEMENTS, TICKS_PER_SEC);
 
 function resetListener() {
   paused = true;
@@ -57,8 +59,7 @@ function resetListener() {
 }
 
 let ticks = 0;
-const ticksPerSec = 50;
-let tickSpeed = Math.floor(1000 / ticksPerSec);
+let tickSpeed = Math.floor(1000 / TICKS_PER_SEC);
 let tickInterval = false;
 
 let paused = false;

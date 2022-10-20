@@ -122,7 +122,6 @@ h2, h3 {
 #shapeStats {
     display: grid;
     grid-template-columns: repeat(2, auto);
-    /* gap: 0.5rem; */
     margin-bottom: 1.4rem;
 }
 
@@ -133,7 +132,6 @@ h2, h3 {
 .shapeStat {
     display: flex;
     flex-direction: column;
-    /* border: 1px solid blueviolet; */
 }
 
 .shapeStat .shapeBoard {
