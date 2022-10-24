@@ -10,6 +10,7 @@ const boardEl = document.querySelector("#board");
 const highScoreEl = document.querySelector("#highScore");
 const playTimeEl = document.querySelector("#playTime");
 const scoreEl = document.querySelector("#score");
+const extraInfoEl = document.querySelector("#extraInfo");
 const nextEl = document.querySelector("#next");
 const nextBoardEl = document.querySelector("#nextBoard");
 const shapeStatsEl = document.querySelector("#shapeStats");
@@ -23,6 +24,7 @@ const ALL_ELEMENTS = {
   HIGHSCORE: highScoreEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
+  EXTRAINFO: extraInfoEl,
   NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
   SHAPESTATS: shapeStatsEl,
@@ -34,6 +36,7 @@ const APP_ELEMENTS = {
   HIGHSCORE: highScoreEl,
   PLAYTIME: playTimeEl,
   SCORE: scoreEl,
+  EXTRAINFO: extraInfoEl,
   NEXT: nextEl,
   NEXTSHAPE: nextBoardEl,
   SHAPESTATS: shapeStatsEl,
@@ -120,6 +123,7 @@ async function init() {
 
 init();
 
+// ----------------------------------------------------------------------------
 // TODO:
 // Extract Board and other classes into own files
 //   Tests needed!
@@ -129,18 +133,3 @@ init();
 //   Rotation wobble fix
 //   Scale based on available display size
 //     CSS fixes - too many specific classes
-
-// ----------------------------------------------------------------------------
-
-// Debug stuff
-
-if (false) {
-  for (let key in SHAPES) {
-    const sh = SHAPES[key];
-    const shape = new Shape(sh);
-    console.log(`${key}\n${shape.toString()}`);
-
-    shape.rotateCCW();
-    console.log(`${key}:CCW\n${shape.toString()}`);
-  }
-}

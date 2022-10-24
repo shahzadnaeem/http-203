@@ -9,6 +9,8 @@ const COMMANDS = {
   DOWN: 4,
   DROP: 5,
   ZIG: 6,
+  FASTER: 7,
+  SLOWER: 8,
 };
 
 const COMMAND_NAMES = Object.keys(COMMANDS);
@@ -24,8 +26,6 @@ export class App {
     this.theBoard = new Board(width, height);
     this.elements = elements;
     this.ticksPerSec = ticksPerSec;
-
-    // this.nextShapeBoard = new Board(SHAPE_BOARD_SIZE, SHAPE_BOARD_SIZE);
 
     this.showDemoBoard = false;
 
@@ -53,11 +53,12 @@ export class App {
     this.rowsDropped = 0;
 
     this.tickNo = 0;
-    this.minTickPlayRate = Math.floor(0.2 * this.ticksPerSec);
+    this.minTickPlayRate = Math.floor(0.1 * this.ticksPerSec);
     this.tickPlayRate = Math.floor(0.8 * this.ticksPerSec); // Move piece after this many ticks
     this.commands = [];
     this.lines = 0;
     this.score = 0;
+    this.level = 1;
     this.nextTimeAdjustScore = 1000;
     this.TimeAdjustScoreInc = 1000;
     this.playTime = 0;
@@ -130,6 +131,12 @@ export class App {
           break;
         case "KeyX":
           this.commands.push(COMMANDS.ZIG);
+          break;
+        case "KeyF":
+          this.commands.push(COMMANDS.FASTER);
+          break;
+        case "KeyS":
+          this.commands.push(COMMANDS.SLOWER);
           break;
       }
     } else {
@@ -216,6 +223,7 @@ export class App {
     this.elements.NEXTSHAPE.classList.remove("gameOver");
   }
 
+  // Used to try stuff out on a board...
   drawDemoBoard(random = false) {
     if (random) {
       if (this.tickNo % 50 === 1) {
@@ -252,22 +260,6 @@ export class App {
     }
   }
 
-  drawScore() {
-    this.elements.HIGHSCORE.textContent = `High Score: ${this.highScore}`;
-    this.elements.SCORE.textContent = `Score: ${this.score}, Lines: ${this.lines}`;
-  }
-
-  drawNext() {
-    this.elements.NEXT.textContent = `Next Shape`;
-    this.elements.NEXT.classList.remove("gameOver");
-  }
-
-  drawGameOver() {
-    this.elements.NEXT.textContent = "GAME OVER!";
-    this.elements.NEXT.classList.add("gameOver");
-    this.elements.NEXTSHAPE.classList.add("gameOver");
-  }
-
   padNum(num) {
     if (num < 10) {
       return `0${num}`;
@@ -283,6 +275,33 @@ export class App {
     this.elements.PLAYTIME.textContent = `Play Time: ${this.padNum(
       mins
     )}:${this.padNum(secs)}`;
+  }
+
+  drawScore() {
+    this.elements.HIGHSCORE.textContent = `High Score: ${this.highScore}`;
+    this.elements.SCORE.textContent = `Score: ${this.score}, Lines: ${this.lines}`;
+  }
+
+  drawExtraInfo() {
+    // TODO: Debug stuff really
+    this.elements.EXTRAINFO.textContent = `Level: ${this.level}, Move rate: ${this.tickPlayRate}, Tps: ${this.ticksPerSec}`;
+  }
+
+  drawTextStats() {
+    this.drawPlayTime();
+    this.drawScore();
+    this.drawExtraInfo();
+  }
+
+  drawNext() {
+    this.elements.NEXT.textContent = `Next Shape`;
+    this.elements.NEXT.classList.remove("gameOver");
+  }
+
+  drawGameOver() {
+    this.elements.NEXT.textContent = "GAME OVER!";
+    this.elements.NEXT.classList.add("gameOver");
+    this.elements.NEXTSHAPE.classList.add("gameOver");
   }
 
   drawShapeStats() {
@@ -305,8 +324,7 @@ export class App {
   }
 
   drawStats() {
-    this.drawPlayTime();
-    this.drawScore();
+    this.drawTextStats();
 
     if (this.gameOver) {
       this.drawGameOver();
@@ -440,6 +458,12 @@ export class App {
       this.drop();
     } else if (command === COMMANDS.ZIG) {
       this.zig();
+    } else if (command === COMMANDS.FASTER) {
+      if (this.tickPlayRate > this.minTickPlayRate) {
+        this.tickPlayRate--;
+      }
+    } else if (command === COMMANDS.SLOWER) {
+      this.tickPlayRate++;
     }
   }
 
@@ -459,7 +483,7 @@ export class App {
     if (this.tickNo % this.ticksPerSec === 0) {
       this.playTime++;
 
-      // NOTE: Keeps time display smooth
+      // NOTE: Keeps time display smooth - otherwise we can get gaps
       this.drawPlayTime();
     }
 
