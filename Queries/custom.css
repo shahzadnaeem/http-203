@@ -1,0 +1,276 @@
+:root {
+    --bg: rgb(166, 243, 141);
+    --bg-header: rgb(166, 235, 105);
+    --bg-ls: yellow;
+    --bg-rs: yellow;
+    --bg-footer: rgb(166, 235, 105);
+    --bg-box: cyan;
+
+    --fg: black;
+    --fg-sep: darkgray;
+    --fg-app-status: green;
+    --fg-app-status-working: crimson;
+
+    --bd: black;
+
+    --font-sz: 1.0em;
+}
+
+html {
+    font-size: var(--font-sz);
+}
+
+body {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+    background-color: var(--bg);
+    color: var(--fg);
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+}
+
+header {
+    padding-bottom: 0.5rem;
+    background-color: var(--bg-header);
+}
+
+footer {
+    background-color: var(--bg-footer);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+}
+
+h3 {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.main {
+    flex-grow: 1;
+    border: 2px solid var(--bd);
+    gap: 1rem;
+}
+
+.controls {
+    display: grid;
+    grid-auto-flow: column;
+    place-content: center;
+    gap: 0.25rem;
+}
+
+.control-sep {
+    border-right: 1px solid var(--fg-sep);
+}
+
+.app-status {
+    color: var(--fg-app-status);
+}
+
+.app-status__working {
+    color: var(--fg-app-status-working);
+}
+
+.app {
+    display: grid;
+    max-width: 1200px;
+    min-height: 100%;
+    margin-inline: auto;
+    padding: 2px;
+    grid-template-areas:
+        "TL HD HD"
+        "LS AP RS"
+        ".  FC .";
+    grid-template-rows: 220px 1fr 3.0rem;
+    grid-template-columns: 220px 1fr 220px;
+    font-weight: 600;
+    font-size: 3.0rem;
+}
+
+.app>.app-tl {
+    grid-area: TL;
+    font-weight: 100;
+    font-size: 1.0rem;
+}
+
+.app-hd {
+    grid-area: HD;
+    display: grid;
+    place-content: center;
+}
+
+.app-hd::before {
+    font-style: italic;
+}
+
+.app-ls {
+    grid-area: LS;
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--bg-ls);
+}
+
+.app-ap {
+    grid-area: AP;
+    display: grid;
+    place-content: center;
+}
+
+.app-rs {
+    grid-area: RS;
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--bg-rs);
+    display: flex;
+    align-items: end;
+    justify-content: center;
+}
+
+.app-fc {
+    grid-area: FC;
+    display: grid;
+    place-content: center;
+    border: 1px solid darkgreen;
+}
+
+.box {
+    background-color: var(--bg-box);
+    /* margin: 1.0rem; */
+    padding: 0.25rem;
+    text-align: start;
+    width: 200px;
+    height: 200px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.invert-filter {
+    filter: invert();
+}
+
+.wobble {
+    animation: animate-wobble 0.5s linear;
+}
+
+@keyframes animate-wobble {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(20deg);
+    }
+
+    35% {
+        transform: rotate(-20deg);
+    }
+
+    55% {
+        transform: rotate(15deg);
+    }
+
+    70% {
+        transform: rotate(-10deg);
+    }
+
+    80% {
+        transform: rotate(5deg);
+    }
+
+    90% {
+        transform: rotate(-2deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@media (width < 600px) {
+    :root {
+        --bg-ls: crimson;
+        --bg-rs: crimson;
+    }
+
+    .app {
+        font-size: 0.8rem;
+        font-weight: 100;
+    }
+
+    .app-hd::before {
+        content: "@media < 600px";
+    }
+}
+
+@media (600px <=width < 800px) {
+    :root {
+        --bg-ls: firebrick;
+        --bg-rs: firebrick;
+    }
+
+    .app {
+        font-size: 1.0rem;
+        font-weight: 200;
+    }
+
+    .app-hd::before {
+        content: "@media 600px <-> 800px";
+    }
+}
+
+@media (800px <=width < 1000px) {
+    :root {
+        --bg-ls: orangered;
+        --bg-rs: orangered;
+    }
+
+    .app {
+        font-size: 1.5rem;
+        font-weight: 300;
+    }
+
+    .app-hd::before {
+        content: "@media 800px <-> 1000px";
+    }
+}
+
+@media (1000px <=width < 1200px) {
+    :root {
+        --bg-ls: orange;
+        --bg-rs: orange;
+    }
+
+    .app {
+        font-size: 2.0rem;
+        font-weight: 500;
+    }
+
+    .app-hd::before {
+        content: "@media 1000px <-> 1200px";
+    }
+}
+
+@media (1800px <=width) {
+    :root {
+        --bg-ls: white;
+        --bg-rs: white;
+    }
+
+    .app {
+        font-size: 3.5rem;
+        font-weight: 800;
+    }
+
+    .app-hd::before {
+        content: "@media > 1800px";
+    }
+}
