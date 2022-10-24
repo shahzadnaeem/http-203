@@ -11,6 +11,8 @@ const END_NUM = 20;
 let letters = false;
 let numLimit = 20;
 
+let firstItem, lastItem, currentItem;
+
 function resetListener() {
   init();
 }
@@ -47,6 +49,32 @@ function numLimitListener(ev) {
 
 // ----------------------------------------------------------------------------
 
+function initItemTracker() {
+  if (letters) {
+    firstItem = "A";
+    lastItem = "Z";
+    currentItem = "A";
+  } else {
+    firstItem = 1;
+    lastItem = numLimit;
+    currentItem = 1;
+  }
+}
+
+function allDone() {
+  return currentItem > lastItem;
+}
+
+function nextItem() {
+  if (!allDone()) {
+    if (letters) {
+      currentItem = String.fromCharCode(currentItem.charCodeAt(0) + 1);
+    } else {
+      currentItem++;
+    }
+  }
+}
+
 function initControls() {
   resetEl.removeEventListener("click", resetListener);
   resetEl.addEventListener("click", resetListener);
@@ -59,6 +87,10 @@ function initControls() {
 
   removeEventListener("resize", resizeListener);
   addEventListener("resize", resizeListener);
+
+  initItemTracker();
+
+  console.log(`currentItem = ${currentItem}`);
 }
 
 function initDisplay() {
@@ -252,12 +284,21 @@ function initDisplay() {
     div.style.setProperty("border-radius", "25%");
 
     div.addEventListener("click", (ev) => {
-      div.classList.add("wobble");
+      // console.log(`currentItem = ${currentItem}`);
+      // console.log(`clicked: ${ev.target.textContent}`);
 
-      setTimeout(() => {
-        div.classList.remove("wobble");
-        div.classList.add("fade");
-      }, 500);
+      if (!allDone()) {
+        if (ev.target.textContent == currentItem) {
+          nextItem();
+
+          div.classList.add("wobble");
+
+          setTimeout(() => {
+            div.classList.remove("wobble");
+            div.classList.add("fade");
+          }, 500);
+        }
+      }
     });
 
     extents.push(rect);

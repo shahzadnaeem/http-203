@@ -1,9 +1,9 @@
 :root {
-    --bg: rgb(166, 243, 141);
-    --bg-header: rgb(166, 235, 105);
+    --bg: rgb(212, 255, 197);
+    --bg-header: rgb(206, 247, 170);
     --bg-ls: yellow;
     --bg-rs: yellow;
-    --bg-footer: rgb(166, 235, 105);
+    --bg-footer: rgb(206, 247, 170);
     --bg-box: cyan;
 
     --fg: black;
