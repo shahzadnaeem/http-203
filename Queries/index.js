@@ -37,7 +37,9 @@ function initDisplay() {
 
   const div = document.createElement("div");
   div.classList.add("box");
-  div.textContent = `#${count}\n${JSON.stringify(getViewportInfo(), 0, 2)}`;
+  div.textContent = `#${count}\n${new Date(
+    Date.now()
+  ).toLocaleString()}\n${JSON.stringify(getViewportInfo(), 0, 2)}`;
 
   div.addEventListener("click", (ev) => {
     div.classList.add("wobble");

@@ -1,5 +1,7 @@
 :root {
     --bg: rgb(212, 255, 197);
+    --bg-main: rgb(181, 181, 181);
+    --bg-app: rgb(254, 254, 247);
     --bg-header: rgb(206, 247, 170);
     --bg-ls: yellow;
     --bg-rs: yellow;
@@ -56,6 +58,7 @@ h3 {
 }
 
 .main {
+    background-color: var(--bg-main);
     flex-grow: 1;
     border: 2px solid var(--bd);
     gap: 1rem;
@@ -80,7 +83,20 @@ h3 {
     color: var(--fg-app-status-working);
 }
 
+.media-bar {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: repeat(auto-fit, auto);
+    justify-items: start;
+    overflow: hidden;
+}
+
+.media-bar>div {
+    height: 10px;
+}
+
 .app {
+    background-color: var(--bg-app);
     display: grid;
     max-width: 1200px;
     min-height: 100%;
@@ -195,6 +211,36 @@ h3 {
     }
 }
 
+.width1 {
+    width: 600px;
+    background-color: crimson;
+}
+
+.width2 {
+    width: 800px;
+    background-color: firebrick;
+}
+
+.width3 {
+    width: 1000px;
+    background-color: orangered;
+}
+
+.width4 {
+    width: 1200px;
+    background-color: orange;
+}
+
+.width5 {
+    width: 1800px;
+    background-color: yellow;
+}
+
+.width6 {
+    width: 100%;
+    background-color: hotpink;
+}
+
 @media (width < 600px) {
     :root {
         --bg-ls: crimson;
@@ -259,10 +305,21 @@ h3 {
     }
 }
 
+@media (1200px <=width < 1600px) {
+    .app {
+        font-size: 2.0rem;
+        font-weight: 500;
+    }
+
+    .app-hd::before {
+        content: "@media 1200 <-> 1600";
+    }
+}
+
 @media (1800px <=width) {
     :root {
-        --bg-ls: white;
-        --bg-rs: white;
+        --bg-ls: hotpink;
+        --bg-rs: hotpink;
     }
 
     .app {
