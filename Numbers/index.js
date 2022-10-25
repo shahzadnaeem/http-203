@@ -3,6 +3,7 @@ const mainEl = document.querySelector("#main");
 const toEl = document.querySelector("#to");
 const resetEl = document.querySelector("#reset");
 const lettersEl = document.querySelector("#letters");
+const checkOrderEl = document.querySelector("#checkOrder");
 const numLimitEl = document.querySelector("#num-limit");
 
 const START_NUM = 1;
@@ -10,6 +11,7 @@ const END_NUM = 20;
 
 let letters = false;
 let numLimit = 20;
+let checkOrder = false;
 
 let firstItem, lastItem, currentItem;
 
@@ -29,9 +31,12 @@ const resizeListener = (function makeResizeListener() {
 
 function lettersListener(ev) {
   letters = ev.target.checked;
-  lettersEl.removeEventListener("change", lettersListener);
 
   init();
+}
+
+function checkOrderListener(ev) {
+  checkOrder = ev.target.checked;
 }
 
 function numLimitListener(ev) {
@@ -42,7 +47,6 @@ function numLimitListener(ev) {
   } else {
     numLimit = Number(newLimit);
   }
-  numLimitEl.removeEventListener("input", numLimitListener);
 
   init();
 }
@@ -80,9 +84,15 @@ function initControls() {
   resetEl.addEventListener("click", resetListener);
 
   lettersEl.checked = letters;
+  lettersEl.removeEventListener("change", lettersListener);
   lettersEl.addEventListener("change", lettersListener);
 
+  checkOrderEl.checked = checkOrder;
+  checkOrderEl.removeEventListener("change", checkOrderListener);
+  checkOrderEl.addEventListener("change", checkOrderListener);
+
   numLimitEl.value = numLimit === 0 ? "No limit" : numLimit;
+  numLimitEl.removeEventListener("input", numLimitListener);
   numLimitEl.addEventListener("input", numLimitListener);
 
   removeEventListener("resize", resizeListener);
@@ -284,20 +294,26 @@ function initDisplay() {
     div.style.setProperty("border-radius", "25%");
 
     div.addEventListener("click", (ev) => {
-      // console.log(`currentItem = ${currentItem}`);
-      // console.log(`clicked: ${ev.target.textContent}`);
+      if (checkOrder) {
+        if (!allDone()) {
+          if (ev.target.textContent == currentItem) {
+            nextItem();
 
-      if (!allDone()) {
-        if (ev.target.textContent == currentItem) {
-          nextItem();
+            div.classList.add("wobble");
 
-          div.classList.add("wobble");
-
-          setTimeout(() => {
-            div.classList.remove("wobble");
-            div.classList.add("fade");
-          }, 500);
+            setTimeout(() => {
+              div.classList.remove("wobble");
+              div.classList.add("fade");
+            }, 500);
+          }
         }
+      } else {
+        div.classList.add("wobble");
+
+        setTimeout(() => {
+          div.classList.remove("wobble");
+          div.classList.add("fade");
+        }, 500);
       }
     });
 
