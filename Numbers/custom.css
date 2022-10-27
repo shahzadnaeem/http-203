@@ -30,7 +30,6 @@ header {
 
 #main.done::before {
     position: absolute;
-    z-index: 1;
     content: "👍";
     font-size: 50vw;
     top: 50%;

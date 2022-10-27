@@ -16,6 +16,8 @@
     --bd: black;
 
     --font-sz: 1.0em;
+
+    --media-bar-adjust: 4px;
 }
 
 html {
@@ -62,6 +64,8 @@ h3 {
     flex-grow: 1;
     border: 2px solid var(--bd);
     gap: 1rem;
+    display: flex;
+    flex-flow: column;
 }
 
 .controls {
@@ -86,7 +90,6 @@ h3 {
 .media-bar {
     display: grid;
     grid-auto-flow: row;
-    grid-template-rows: repeat(auto-fit, auto);
     justify-items: start;
     overflow: hidden;
 }
@@ -99,7 +102,7 @@ h3 {
     background-color: var(--bg-app);
     display: grid;
     max-width: 1200px;
-    min-height: 100%;
+    flex-grow: 1;
     margin-inline: auto;
     padding: 2px;
     grid-template-areas:
@@ -212,27 +215,27 @@ h3 {
 }
 
 .width1 {
-    width: 600px;
+    width: calc(600px - var(--media-bar-adjust));
     background-color: crimson;
 }
 
 .width2 {
-    width: 800px;
+    width: calc(800px - var(--media-bar-adjust));
     background-color: firebrick;
 }
 
 .width3 {
-    width: 1000px;
+    width: calc(1000px - var(--media-bar-adjust));
     background-color: orangered;
 }
 
 .width4 {
-    width: 1200px;
+    width: calc(1200px - var(--media-bar-adjust));
     background-color: orange;
 }
 
 .width5 {
-    width: 1800px;
+    width: calc(1800px - var(--media-bar-adjust));
     background-color: yellow;
 }
 
@@ -305,14 +308,14 @@ h3 {
     }
 }
 
-@media (1200px <=width < 1600px) {
+@media (1200px <=width < 1800px) {
     .app {
         font-size: 2.0rem;
         font-weight: 500;
     }
 
     .app-hd::before {
-        content: "@media 1200 <-> 1600";
+        content: "@media 1200 <-> 1800";
     }
 }
 
