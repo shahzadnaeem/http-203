@@ -39,9 +39,19 @@
             <div class="app-hd">Header</div>
             <div class="app-ls">Left Side</div>
             <div class="app-ap">
-                App - This demo shows tracking of the screen size via media queries. No changes are being made to the
-                CSS
-                Grid layout as would normally be the case.
+                <p>
+                    App - This demo shows tracking of the screen size via media queries.
+                </p>
+
+                <p class="small-text">See <i>custom.css</i> for use of calc() and var()</p>
+                <code class="small-text">--bd-width-main: 2px;
+--bd-main: var(--bd-width-main) solid black;
+--bd-app-grid: 3px double lightgray;
+
+--font-sz: 1.0em;
+
+--media-bar-adjust: calc(2 * var(--bd-width-main));
+                </code>
             </div>
             <div class="app-rs">Right Side</div>
             <div class="app-fc">Footer</div>
