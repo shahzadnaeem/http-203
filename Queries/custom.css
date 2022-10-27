@@ -5,10 +5,12 @@
     --bg-header: rgb(206, 247, 170);
     --bg-ls: yellow;
     --bg-rs: yellow;
+    --bg-code: rgb(35, 35, 35);
     --bg-footer: rgb(206, 247, 170);
     --bg-box: cyan;
 
     --fg: black;
+    --fg-code: rgb(195, 210, 31);
     --fg-sep: darkgray;
     --fg-app-status: green;
     --fg-app-status-working: crimson;
@@ -65,10 +67,16 @@ h3 {
     margin-bottom: 0.25rem;
 }
 
+code {
+    padding: 0.5rem;
+    background-color: var(--bg-code);
+    color: var(--fg-code);
+}
+
 .small-text {
-    padding-inline: 5.0rem;
+    margin-inline: 5.0rem;
     text-align: left;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .main {
