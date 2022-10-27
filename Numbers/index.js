@@ -51,6 +51,12 @@ function numLimitListener(ev) {
   init();
 }
 
+function mainListener(ev) {
+  if (allDone()) {
+    init();
+  }
+}
+
 // ----------------------------------------------------------------------------
 
 function initItemTracker() {
@@ -97,6 +103,9 @@ function initControls() {
 
   removeEventListener("resize", resizeListener);
   addEventListener("resize", resizeListener);
+
+  mainEl.removeEventListener("click", mainListener);
+  mainEl.addEventListener("click", mainListener);
 
   initItemTracker();
 
@@ -311,6 +320,8 @@ function initDisplay() {
     }
 
     div.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+
       if (checkOrder) {
         if (!allDone()) {
           if (ev.target.textContent == currentItem) {
@@ -320,6 +331,11 @@ function initDisplay() {
           } else {
             animateEl(ev.target, "incorrect");
           }
+        }
+
+        if (allDone()) {
+          console.log(`Adding '.done'`);
+          mainEl.classList.add("done");
         }
       } else {
         animateEl2(ev.target, "wobble", "fade");
@@ -332,6 +348,7 @@ function initDisplay() {
   }
 
   mainEl.innerHTML = "";
+  mainEl.classList.remove("done");
 
   if (letters) {
     for (let l = 1; l <= 26; l++) {

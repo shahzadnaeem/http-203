@@ -28,6 +28,27 @@ header {
     border: 2px solid var(--bd);
 }
 
+#main.done::before {
+    position: absolute;
+    z-index: 1;
+    content: "👍";
+    font-size: 50vw;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    animation: all-done 1.0s;
+}
+
+@keyframes all-done {
+    0% {
+        opacity: 0%;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}
+
 #controls {
     display: grid;
     grid-auto-flow: column;
