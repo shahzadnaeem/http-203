@@ -36,7 +36,8 @@ header {
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    animation: all-done 1.0s;
+    opacity: 66%;
+    animation: all-done 1s linear;
 }
 
 @keyframes all-done {
@@ -44,8 +45,12 @@ header {
         opacity: 0%;
     }
 
-    100% {
+    33% {
         opacity: 100%;
+    }
+
+    100% {
+        opacity: 66%;
     }
 }
 

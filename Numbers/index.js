@@ -334,7 +334,6 @@ function initDisplay() {
         }
 
         if (allDone()) {
-          console.log(`Adding '.done'`);
           mainEl.classList.add("done");
         }
       } else {
