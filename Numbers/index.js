@@ -11,7 +11,7 @@ const END_NUM = 20;
 
 let letters = false;
 let numLimit = 20;
-let checkOrder = false;
+let checkOrder = true;
 
 let firstItem, lastItem, currentItem;
 
@@ -293,27 +293,36 @@ function initDisplay() {
     );
     div.style.setProperty("border-radius", "25%");
 
+    function animateEl(el, cls, delayMs = 500) {
+      el.classList.add(cls);
+
+      setTimeout(() => {
+        el.classList.remove(cls);
+      }, delayMs);
+    }
+
+    function animateEl2(el, cls, postRemoveCls, delayMs = 500) {
+      el.classList.add(cls);
+
+      setTimeout(() => {
+        el.classList.remove(cls);
+        el.classList.add(postRemoveCls);
+      }, delayMs);
+    }
+
     div.addEventListener("click", (ev) => {
       if (checkOrder) {
         if (!allDone()) {
           if (ev.target.textContent == currentItem) {
             nextItem();
 
-            div.classList.add("wobble");
-
-            setTimeout(() => {
-              div.classList.remove("wobble");
-              div.classList.add("fade");
-            }, 500);
+            animateEl2(ev.target, "wobble", "fade");
+          } else {
+            animateEl(ev.target, "incorrect");
           }
         }
       } else {
-        div.classList.add("wobble");
-
-        setTimeout(() => {
-          div.classList.remove("wobble");
-          div.classList.add("fade");
-        }, 500);
+        animateEl2(ev.target, "wobble", "fade");
       }
     });
 

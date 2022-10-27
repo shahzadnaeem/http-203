@@ -2,12 +2,13 @@
     --bd: black;
     --bd-num: rgb(193, 57, 8);
     --bg: rgb(206, 220, 224);
+    --bg-incorrect: rgba(255, 0, 0, 0.666);
     --fg: black;
     --fg-sep: darkgray;
 }
 
 body {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: sans-serif;
 
     background-color: var(--bg);
     color: var(--fg);
@@ -48,7 +49,16 @@ header {
 
 .fade {
     transition: opacity 0.5s linear;
-    opacity: 33%;
+    opacity: 37%;
+}
+
+.fade::before {
+    position: absolute;
+    z-index: 1;
+    content: "👍";
+    font-size: 25%;
+    top: 2.5%;
+    left: 2.5%;
 }
 
 .wobble {
@@ -86,6 +96,24 @@ header {
 
     100% {
         transform: rotate(0deg);
+    }
+}
+
+.incorrect {
+    animation: animate-incorrect 0.6s ease;
+}
+
+@keyframes animate-incorrect {
+    0% {
+        background-color: inherit;
+    }
+
+    50% {
+        background-color: var(--bg-incorrect);
+    }
+
+    100% {
+        background-color: inherit;
     }
 }
 
