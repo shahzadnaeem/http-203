@@ -95,7 +95,10 @@ div {
     padding: 0.5rem;
 }
 
-main::before {
+/* Where we want to show some CSS descriptions */
+:is(main, article, div, p)::before {
+    border-bottom: 1px dashed;
+    margin-bottom: 0.25rem;
     background-color: var(--bg-css-desc);
     color: var(--fg-css-desc);
     opacity: 66%;
@@ -113,14 +116,6 @@ div.odd {
 
 div.even {
     background-color: var(--bg-even);
-}
-
-div::before {
-    background-color: var(--bg-css-desc);
-    color: var(--fg-css-desc);
-    opacity: 66%;
-    text-align: center;
-    display: block;
 }
 
 div:nth-child(odd)::before {
@@ -145,27 +140,11 @@ div>p:nth-of-type(3) {
 }
 
 p::before {
-    background-color: var(--bg-css-desc);
-    color: var(--fg-css-desc);
-    opacity: 66%;
-    text-align: center;
-    display: block;
-}
-
-p::before {
     content: "#"counter(np)": <p>";
 }
 
 p:nth-of-type(2) {
     color: var(--fg-yellow);
-}
-
-article::before {
-    background-color: var(--bg-css-desc);
-    color: var(--fg-css-desc);
-    opacity: 66%;
-    text-align: center;
-    display: block;
 }
 
 article::before {
