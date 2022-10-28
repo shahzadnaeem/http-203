@@ -8,35 +8,46 @@
     <title>Selectors</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="showCss.css">
+    <script defer src="./index.js"></script>
 </head>
 
 <body>
-    <main>
+    <header id="header">
         <h1>Selectors</h1>
-        <p>Plus counters and ::before pseudo elements for element numbering and details. More to do...</p>
+        <div id="controls">
+            <button id="reset">Reset</button>
+            <span class="control-sep"></span>
+            <input type="checkbox" name="showCss" id="showCss">
+            <label for="showCss">Show CSS</label>
+        </div>
+    </header>
+
+    <main id="main">
+        <p>Plus counters and ::before pseudo elements for element numbering and details. Click 'Show CSS'!</p>
         <div>
-            <span>Just some text...</span>
+            <span>Just some inline text...</span>
             <p>Paragraph 1</p>
             <p>Paragraph 2</p>
             <p>Paragraph 3</p>
         </div>
 
         <div>
-            <span>Just some text...</span>
+            <span>Just some inline text...</span>
             <p>Paragraph 1</p>
             <p>Paragraph 2</p>
             <p>Paragraph 3</p>
         </div>
 
         <div class="even">
-            <span>Just some text...</span>
+            <span>Just some inline text...</span>
             <p>Paragraph 1</p>
             <p>Paragraph 2</p>
             <p>Paragraph 3</p>
         </div>
 
         <div class="odd">
-            <span>Just some text...</span>
+            <span>Just some inline text...</span>
             <p>Paragraph 1</p>
             <p>Paragraph 2</p>
             <p>Paragraph 3</p>
@@ -50,10 +61,10 @@
             </article>
 
             <article>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                <div>Some stuff</div>
+                <div>Other stuff</div>
+                <div>Further stuff</div>
+                <div>The End</div>
             </article>
         </main>
     </main>

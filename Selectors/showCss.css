@@ -1,0 +1,80 @@
+/* Counters */
+
+:root {
+    --otl-showCss: 1px dotted blue;
+    --bd-showCss: 3px double greenyellow;
+}
+
+body {
+    counter-reset: nmain -1 ndiv -1 nart -1 np -1;
+}
+
+main {
+    counter-reset: ndiv -1 nart -1 np -1;
+    counter-increment: nmain;
+}
+
+article {
+    counter-reset: ndiv -1;
+    counter-increment: nart;
+}
+
+div {
+    counter-reset: np -1;
+    counter-increment: ndiv;
+}
+
+p {
+    counter-increment: np;
+}
+
+/* CSS Annotations */
+
+/* Where we want to show some CSS descriptions */
+:is(main.showCss, article.showCss, div.showCss, p.showCss)::before {
+    border-bottom: 1px dashed;
+    margin-bottom: 0.25rem;
+    background-color: var(--bg-css-desc);
+    color: var(--fg-css-desc);
+    opacity: 66%;
+    text-align: center;
+    display: block;
+}
+
+main.showCss::before {
+    content: "#"counter(nmain)": <main>";
+}
+
+div.showCss:nth-child(odd)::before {
+    content: "#"counter(ndiv)": <div> (odd)";
+}
+
+div.showCss:nth-child(even)::before {
+    content: "#"counter(ndiv)": <div> (even)";
+}
+
+div.showCss.odd::before {
+    content: "#"counter(ndiv)": <div class=\"odd\">";
+}
+
+div.showCss.even::before {
+    content: "#"counter(ndiv)": <div class=\"even\">";
+}
+
+p.showCss::before {
+    content: "#"counter(np)": <p>";
+}
+
+article.showCss::before {
+    content: "#"counter(nart)": <article>";
+}
+
+main.showCss>*, main.showCss>article>* {
+    margin-top: 0.25rem;
+    outline: var(--otl-showCss);
+    /* border: var(--bd-showCss); */
+}
+
+.showCss {
+    padding-left: 1.0rem;
+}
