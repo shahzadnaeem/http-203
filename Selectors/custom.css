@@ -2,14 +2,23 @@
     --bg: rgb(144, 144, 144);
     --fg: black;
     --border: rgb(172, 255, 243);
-    --bd-2: rgb(223, 255, 223);
+
+    --bg-main: rgb(189, 189, 189);
     --bg-div: rgb(72, 72, 225);
+
     --fg-white: white;
     --fg-yellow: yellow;
     --fg-header: rgb(49, 14, 73);
+    --fg-css-desc: black;
+    --fg-sample-text: navy;
+
     --bg-odd: rgb(178, 34, 34, 0.8);
     --bg-even: rgba(34, 178, 94, 0.8);
     --bg-3rd-p: rgb(207, 119, 226);
+    --bg-css-desc: lightblue;
+    --bg-sample-text: lightgrey;
+
+    --bd-2: rgb(245, 199, 206);
 }
 
 body {
@@ -19,9 +28,41 @@ body {
     color: var(--fg);
 }
 
+/* Counters */
+
+body {
+    counter-reset: nmain -1 ndiv -1 nart -1 np -1;
+}
+
+main {
+    counter-reset: ndiv -1 nart -1 np -1;
+    counter-increment: nmain;
+}
+
+article {
+    counter-reset: ndiv -1;
+    counter-increment: nart;
+}
+
+div {
+    counter-reset: np -1;
+    counter-increment: ndiv;
+}
+
+p {
+    counter-increment: np;
+}
+
+main {
+    background-color: var(--bg-main);
+    max-width: 800px;
+    margin-inline: auto;
+    padding: 0.5rem;
+    /* min-height: 100vh; */
+}
+
 h1 {
     margin-bottom: 0.5rem;
-    text-decoration: underline;
 }
 
 h2 {
@@ -41,10 +82,29 @@ article {
     padding: 0.25rem;
 }
 
+span {
+    color: var(--fg-sample-text);
+    background-color: var(--bg-sample-text);
+    font-style: italic;
+    font-weight: 500;
+}
+
 div {
     background-color: var(--bg-div);
     color: var(--fg-white);
     padding: 0.5rem;
+}
+
+main::before {
+    background-color: var(--bg-css-desc);
+    color: var(--fg-css-desc);
+    opacity: 66%;
+    text-align: center;
+    display: block;
+}
+
+main::before {
+    content: "#"counter(nmain)": <main>";
 }
 
 div.odd {
@@ -55,25 +115,70 @@ div.even {
     background-color: var(--bg-even);
 }
 
+div::before {
+    background-color: var(--bg-css-desc);
+    color: var(--fg-css-desc);
+    opacity: 66%;
+    text-align: center;
+    display: block;
+}
+
+div:nth-child(odd)::before {
+    content: "#"counter(ndiv)": <div> (odd)";
+}
+
+div:nth-child(even)::before {
+    content: "#"counter(ndiv)": <div> (even)";
+}
+
+div.odd::before {
+    content: "#"counter(ndiv)": <div class=\"odd\">";
+}
+
+div.even::before {
+    content: "#"counter(ndiv)": <div class=\"even\">";
+}
+
 div>p:nth-of-type(3) {
     background-color: var(--bg-3rd-p);
     color: black;
+}
+
+p::before {
+    background-color: var(--bg-css-desc);
+    color: var(--fg-css-desc);
+    opacity: 66%;
+    text-align: center;
+    display: block;
+}
+
+p::before {
+    content: "#"counter(np)": <p>";
 }
 
 p:nth-of-type(2) {
     color: var(--fg-yellow);
 }
 
-div:nth-child(even) {
-    font-size: 1.5rem;
-    border: 2px solid var(--bd-2);
+article::before {
+    background-color: var(--bg-css-desc);
+    color: var(--fg-css-desc);
+    opacity: 66%;
+    text-align: center;
+    display: block;
+}
+
+article::before {
+    content: "#"counter(nart)": <article>";
+}
+
+article div:nth-child(even) {
+    outline: 2px solid var(--bd-2);
     margin-bottom: 0.75rem;
 }
 
-div:nth-child(even)::before {
-    content: 'even - ';
-}
-
-div+div {
-    margin-top: 0.25rem;
+main>*+* {
+    margin-top: 1rem;
+    outline: 2px solid blue;
+    border: 2px solid greenyellow;
 }
