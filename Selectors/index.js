@@ -26,7 +26,7 @@ const resizeListener = (function makeResizeListener() {
 function showCssListener(ev) {
   showCss = ev.target.checked;
 
-  const elTypes = ["main", "article", "div", "p"];
+  const elTypes = ["main", "article", "section", "div", "p"];
 
   elTypes.forEach((elType) => {
     document

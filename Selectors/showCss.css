@@ -1,4 +1,4 @@
-/* Counters */
+/* Counters - NOTE: Nesting order is tricky */
 
 :root {
     --otl-showCss: 1px dotted blue;
@@ -6,17 +6,22 @@
 }
 
 body {
-    counter-reset: nmain -1 ndiv -1 nart -1 np -1;
+    counter-reset: nmain -1 nart -1 nsection -1 ndiv -1 np -1;
 }
 
 main {
-    counter-reset: ndiv -1 nart -1 np -1;
+    counter-reset: nart -1 nsection -1 ndiv -1 np -1;
     counter-increment: nmain;
 }
 
 article {
-    counter-reset: ndiv -1;
+    counter-reset: nsection -1, ndiv -1;
     counter-increment: nart;
+}
+
+section {
+    counter-reset: ndiv -1 np -1;
+    counter-increment: nsection;
 }
 
 div {
@@ -31,7 +36,7 @@ p {
 /* CSS Annotations */
 
 /* Where we want to show some CSS descriptions */
-:is(main.showCss, article.showCss, div.showCss, p.showCss)::before {
+:is(main.showCss, article.showCss, section.showCss, div.showCss, p.showCss)::before {
     border-bottom: 1px dashed;
     margin-bottom: 0.25rem;
     background-color: var(--bg-css-desc);
@@ -62,14 +67,18 @@ div.showCss.even::before {
 }
 
 p.showCss::before {
-    content: "#"counter(np)": <p>";
+    content: "#"counter(ndiv)"."counter(np)": <div>.<p>";
 }
 
 article.showCss::before {
     content: "#"counter(nart)": <article>";
 }
 
-main.showCss>*, main.showCss>article>* {
+section.showCss::before {
+    content: "#"counter(nsection)": <section>";
+}
+
+main.showCss, article.showCss, section.showCss, div.showCss, p.showCss {
     margin-top: 0.25rem;
     outline: var(--otl-showCss);
     /* border: var(--bd-showCss); */

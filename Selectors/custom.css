@@ -18,10 +18,12 @@
     --bg-auto-even: rgba(34, 178, 120, 0.6);
     --bg-even: rgba(19, 188, 36, 0.8);
     --bg-3rd-p: rgb(207, 119, 226);
+    --bg-4th-p: rgb(226, 226, 119);
     --bg-css-desc: lightblue;
     --bg-sample-text: lightgrey;
 
     --bd-2: rgb(245, 199, 206);
+    --bd-3: rgb(240, 245, 199);
 }
 
 body {
@@ -69,6 +71,12 @@ header {
 article {
     border: 1px solid var(--border);
     padding: 0.25rem;
+}
+
+section {
+    background-color: rebeccapurple;
+    padding: 0.5rem;
+    border: 1px solid var(--bd-3);
 }
 
 span {
@@ -127,10 +135,16 @@ p:nth-of-type(2) {
     color: var(--fg-yellow);
 }
 
+article>p:nth-of-type(4) {
+    background-color: var(--bg-4th-p);
+}
+
 article div:nth-child(even) {
     border: 2px solid var(--bd-2);
 }
 
-article>div+div, main>*+* {
+/* Adjacent element padding */
+
+article>*+*, main>*+*, section>*+* {
     margin-top: 0.5rem;
 }
