@@ -1,8 +1,8 @@
 :root {
     --bg: rgb(141, 156, 243);
-    --bg-header: rgb(105, 118, 235);
+    --bg-header: rgb(105, 142, 235);
     --bg-footer: rgb(105, 142, 235);
-    --bg-box: rgb(123, 255, 0);
+    --bg-box: rgb(178, 223, 136);
 
     --fg: black;
     --fg-sep: darkgray;
@@ -46,6 +46,7 @@ h2, h3 {
 
 #main {
     flex-grow: 1;
+    padding-inline: 0.5rem;
     border: 2px solid var(--bd);
     overflow-y: auto;
 
