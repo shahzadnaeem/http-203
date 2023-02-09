@@ -18,5 +18,12 @@
             "url": "http://localhost:5500/Tetris/index.html",
             "webRoot": "${workspaceFolder}",
         },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Intersection",
+            "url": "http://localhost:5500/IntersectionObserver/index.html",
+            "webRoot": "${workspaceFolder}",
+        },
     ]
 }
