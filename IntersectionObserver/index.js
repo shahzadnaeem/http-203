@@ -9,8 +9,8 @@ const clockEl = document.querySelector("#clock");
 let box1El = false;
 let otherBoxesEls = false;
 
-let count = 0;
 let check1 = true;
+let boxNum = 0;
 
 function resetListener() {
   init();
@@ -33,9 +33,7 @@ function initControls() {
   trackCheckbox(check1El, check1, check1Listener);
 }
 
-let boxNum = 0;
-
-function addBox(enabled = false) {
+function addBox(first = false) {
   boxNum++;
 
   const div = document.createElement("div");
@@ -74,11 +72,11 @@ function addBox(enabled = false) {
     }
   });
 
-  if (!enabled) {
+  if (!first) {
     div.classList.add("dull-filter");
   }
 
-  if (check1 && boxNum == 1) {
+  if (first && check1) {
     div.classList.add("invert-filter");
   }
 
@@ -165,8 +163,6 @@ function initIntersectionObservation(elems) {
 }
 
 function initDisplay() {
-  count++;
-
   mainEl.innerHTML = "";
 
   box1El = addBox(true);
@@ -178,8 +174,6 @@ function initDisplay() {
 }
 
 async function init() {
-  check1 = true;
-
   await waitMs(500, appStatusEl, "app-status__working");
 
   initControls();
