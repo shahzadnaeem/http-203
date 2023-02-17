@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squares</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="custom.css">
+    <script defer type="module" src="utils.js"></script>
+    <script defer type="module" src="index.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Squares</h1>
+        <h2>Squares light up due to odd number of factors</h2>
+        <div id="controls">
+            <button id="reset">Reset</button>
+            <span class="control-sep"></span>
+            <label for="howMany"># Lights</label>
+            <input type="range" min="1" max="625" step="1" name="howMany" id="howMany">
+            <span id="numBoxes"></span>
+            <span class="control-sep"></span>
+            <span id="animation-frame">0</span>
+            <span class="control-sep"></span>
+            <span id="app-status" class="app-status">●</span>
+        </div>
+    </header>
+    <main id="main">
+        <div class="boxes-container"></div>
+    </main>
+    <footer id="clock">D/M/Y HH:MM:SS</footer>
+</body>
+
+</html>
