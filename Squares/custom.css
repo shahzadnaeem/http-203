@@ -134,12 +134,36 @@ h2, h3 {
     font-weight: 700;
 }
 
+.box.finished {
+    border-radius: 25%;
+}
+
 .box-lit.finished {
-    background-color: var(--bg-box-lit);
     border-radius: 50%;
+    background-color: var(--bg-box-lit);
 }
 
 .box-single-limit {
     border-radius: 50%;
     filter: hue-rotate(90deg);
+}
+
+@media (900px < width <=1200px) {
+    :root {
+        --box-sz: 30px;
+    }
+
+    .box::before {
+        font-size: medium;
+    }
+}
+
+@media (width <=900px) {
+    :root {
+        --box-sz: 20px;
+    }
+
+    .box::before {
+        font-size: x-small;
+    }
 }
