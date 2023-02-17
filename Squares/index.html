@@ -16,9 +16,7 @@
     <header>
         <h1>Squares</h1>
         <h2>Squares light up due to odd number of factors</h2>
-        <p>4 has factors: 1,2,4, but 2 has factors: 1,2, 8 has 1,2,4,8 ...
-            <a href="https://www.youtube.com/watch?v=-UBDRX6bk-A">see this Numberphile episode</a>
-        </p>
+        <p>4 has factors: 1,2,4, but 2 has factors: 1,2, 8 has 1,2,4,8 ...</p>
         <div id="controls">
             <button id="reset">Reset</button>
             <span class="control-sep"></span>
@@ -26,9 +24,11 @@
             <input type="range" min="1" max="625" step="1" name="howMany" id="howMany">
             <span id="numBoxes"></span>
             <span class="control-sep"></span>
-            <span id="animation-frame">0</span>
+            <label for="speed">Speed</label>
+            <input type="range" min="1" max="50" step="1" name="speed" id="speed">
+            <span id="showSpeed"></span>
             <span class="control-sep"></span>
-            <span id="app-status" class="app-status">●</span>
+            <span id="animation-frame">0</span>
         </div>
     </header>
     <main id="main">

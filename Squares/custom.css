@@ -14,8 +14,9 @@
     --box-sz: 40px;
 
     --bg-box: rgb(4, 9, 66);
+    --bg-box-half-lit: rgba(242, 242, 42, 0.5);
     --bg-box-lit: rgb(242, 242, 42);
-    --fg-box: rgb(92, 9, 31);
+    --fg-box: rgb(152, 9, 9);
     --fg-box-lit: rgb(6, 15, 120);
     ;
 }
@@ -71,7 +72,7 @@ h2, h3 {
 }
 
 #animation-frame {
-    width: 8rem;
+    width: 2rem;
     font-weight: bold;
 }
 
@@ -128,7 +129,17 @@ h2, h3 {
 }
 
 .box-lit {
-    background-color: var(--bg-box-lit);
+    background-color: var(--bg-box-half-lit);
     color: var(--fg-box-lit);
     font-weight: 700;
+}
+
+.box-lit.finished {
+    background-color: var(--bg-box-lit);
+    border-radius: 50%;
+}
+
+.box-single-limit {
+    border-radius: 50%;
+    filter: hue-rotate(90deg);
 }
