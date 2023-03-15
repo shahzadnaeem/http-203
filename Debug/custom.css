@@ -6,6 +6,7 @@
     --fg: rgb(48, 48, 48);
     --fg-sep: darkgray;
     --fg-main: var(--bg);
+    --fg-main-alt: rgb(248, 248, 191);
 
     --bd-controls: rgb(219, 213, 213, 0.2);
 }
@@ -20,6 +21,7 @@ body {
 header {
     background-color: var(--bg-header);
     text-align: center;
+    padding-bottom: 0.75rem;
 }
 
 h1 {
@@ -34,7 +36,6 @@ h2, h3 {
 div, p {
     padding: 0.25rem;
 }
-
 
 #controls {
     max-width: fit-content;
@@ -64,4 +65,8 @@ div, p {
 #main>div {
     display: grid;
     gap: 0.5rem;
+}
+
+#main>div *:nth-child(even) {
+    color: var(--fg-main-alt);
 }

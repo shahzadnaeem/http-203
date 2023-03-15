@@ -4,8 +4,6 @@ const debugSpecificCssEl = document.querySelector("#debugSpecificCss");
 const mainEl = document.querySelector("#main");
 const specificEl = document.querySelector("#deepest");
 
-console.log(`specificEl = ${specificEl}`);
-
 let debugClass = "__CSSDEBUG__";
 
 let debugCss = false;
@@ -19,16 +17,12 @@ function resetListener() {
 }
 
 function debugCssListener(ev) {
-  console.log("Debug Main listener");
-
   debugCss = ev.target.checked;
 
   updatePage();
 }
 
 function debugSpecificCssListener(ev) {
-  console.log("Debug Deepest listener");
-
   debugSpecificCss = ev.target.checked;
 
   updatePage();
