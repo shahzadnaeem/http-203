@@ -1,0 +1,46 @@
+.__CSSDEBUG__ {
+    --bd-width: 2px;
+    --bd-widthX: 5px;
+    --bd-style: dotted;
+    --bd-styleX: solid;
+    --bd-lev1-fg: yellow;
+    --bd-lev2-fg: orange;
+    --bd-lev3-fg: orangered;
+    --bd-lev4-fg: yellowgreen;
+    --bd-lev5-fg: lightskyblue;
+    --bd-lev6-fg: lightpink;
+    --bd-lev7-fg: rgb(198, 128, 62);
+    --bd-levX-fg: white;
+}
+
+.__CSSDEBUG__ {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev1-fg) !important;
+}
+
+.__CSSDEBUG__>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev2-fg) !important;
+}
+
+.__CSSDEBUG__>*>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev3-fg) !important;
+}
+
+.__CSSDEBUG__>*>*>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev4-fg) !important;
+}
+
+.__CSSDEBUG__>*>*>*>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev5-fg) !important;
+}
+
+.__CSSDEBUG__>*>*>*>*>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev6-fg) !important;
+}
+
+.__CSSDEBUG__>*>*>*>*>*>* {
+    border: var(--bd-width) var(--bd-style) var(--bd-lev7-fg) !important;
+}
+
+.__CSSDEBUG__>*>*>*>*>*>*>* {
+    border: var(--bd-widthX) var(--bd-styleX) var(--bd-levX-fg) !important;
+}
