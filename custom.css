@@ -42,10 +42,9 @@ a {
 }
 
 .links-entry {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    gap: 1.0rem;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 0.5rem;
 }
 
 .links-entry+img {
@@ -63,3 +62,39 @@ a {
 .links-entry>a[href*="www.youtube.com"]::after {
     content: ' ⮵ YouTube';
 }
+
+.bonus {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--dark-bg);
+}
+
+.bonus>* {
+    background-color: var(--yellow-bg);
+    padding: 0.25rem;
+}
+
+/* .bonus-entry {
+    padding: 0.25rem;
+    display: grid;
+    grid-template-columns: 1fr 3fr 4fr;
+    gap: 0.5rem;
+} */
+
+/* .bonus-entry {
+    background-color: var(--dark-bg);
+    margin-block: 0.5rem;
+    padding: 0.25rem;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+}
+
+.bonus-entry>* {
+    background-color: var(--yellow-bg);
+    padding: 0.25rem;
+} */
